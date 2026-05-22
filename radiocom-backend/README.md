@@ -107,14 +107,14 @@ You should see:
 🚀  RadioCom API Server
     Environment : development
     Port        : 3001
-    Base URL    : https://gwradio-backend.onrender.com/api
+    Base URL    : https://gwradio-live.onrender.com/api
 
 📡  Endpoints:
-    POST  https://gwradio-backend.onrender.com/api/signup
-    POST  https://gwradio-backend.onrender.com/api/contact
-    POST  https://gwradio-backend.onrender.com/api/subscribe
-    POST  https://gwradio-backend.onrender.com/api/unsubscribe
-    GET   https://gwradio-backend.onrender.com/api/health
+    POST  https://gwradio-live.onrender.com/api/signup
+    POST  https://gwradio-live.onrender.com/api/contact
+    POST  https://gwradio-live.onrender.com/api/subscribe
+    POST  https://gwradio-live.onrender.com/api/unsubscribe
+    GET   https://gwradio-live.onrender.com/api/health
 ```
 
 ### 7. Open the frontend
@@ -122,7 +122,7 @@ You should see:
 Open `index.html` with **VS Code Live Server** (right-click → *Open with Live Server*),
 or open it directly in your browser from the file system.
 
-The `api.js` script automatically connects to `https://gwradio-backend.onrender.com/api`.
+The `api.js` script automatically connects to `https://gwradio-live.onrender.com/api`.
 
 ---
 
