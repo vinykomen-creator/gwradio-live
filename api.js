@@ -1,6 +1,6 @@
 'use strict';
 
-const API_BASE = 'http://localhost:3001/api';
+const API_BASE = 'https://gwradio-backend.onrender.com/api';
 
 async function apiPost(endpoint, payload) {
   const res = await fetch(`${API_BASE}${endpoint}`, {

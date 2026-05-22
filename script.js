@@ -525,7 +525,7 @@ function handleNewsletterSubmit(event) {
     return;
   }
 
-  fetch('http://localhost:3001/api/subscribe', {
+  fetch('https://gwradio-backend.onrender.com/api/subscribe', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -572,7 +572,7 @@ async function handleFormSubmit(event, type) {
         agreed_terms: document.getElementById('terms').checked
       };
 
-      const response = await fetch('http://localhost:3001/api/signup', {
+      const response = await fetch('https://gwradio-backend.onrender.com/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -600,7 +600,7 @@ async function handleFormSubmit(event, type) {
         message: document.getElementById('contactMessage').value.trim()
       };
 
-      const response = await fetch('http://localhost:3001/api/contact', {
+      const response = await fetch('https://gwradio-backend.onrender.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
