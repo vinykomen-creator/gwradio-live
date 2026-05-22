@@ -39,7 +39,19 @@ app.use(cors({
 }));
 
 
-app.options('*', cors());
+app.options('*', cors());app.options('*', cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+    const isFileOrigin = origin === 'null';
+    const isAllowed = config.allowedOrigins.includes(origin);
+    if (isLocalhost || isFileOrigin || isAllowed) return callback(null, true);
+    return callback(new Error(`CORS policy does not allow origin: ${origin}`));
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Accept'],
+  credentials: false,
+}));
 
 
 app.use(express.json({ limit: '64kb' }));
