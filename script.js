@@ -153,8 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initListenLive();
   checkInitialPage();
-});
 
+const signupForm = document.getElementById('signupForm');
+  if (signupForm) signupForm.addEventListener('submit', (e) => handleFormSubmit(e, 'signup'));
+
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) contactForm.addEventListener('submit', (e) => handleFormSubmit(e, 'contact'));
+});
 
 function initNavigation() {
   // All [data-page] links
