@@ -7,6 +7,15 @@ const morgan     = require('morgan');
 const rateLimit  = require('express-rate-limit');
 
 const config     = require('./config');
+const pool = require('./db/postgres');
+
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('[DB] Supabase connection FAILED:', err.message);
+  } else {
+    console.log('[DB] Supabase connected successfully at:', res.rows[0].now);
+  }
+});
 const apiRoutes  = require('./routes/api');
 const { sendError } = require('./utils/helpers');
 

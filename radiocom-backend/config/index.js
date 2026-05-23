@@ -21,7 +21,9 @@ module.exports = {
 
   db: {
     path: process.env.DB_PATH || './db/radiocom.sqlite',
+    url: process.env.DATABASE_URL || null,
   },
+  
 
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // 15 min
