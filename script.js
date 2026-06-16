@@ -144,6 +144,204 @@ function miniExpandToFull() {
   showListenModal();
 }
 
+const eventsData = [
+  
+  {
+    date: "May 26",
+    tag: "Momentum Radio Conference",
+    title: "Global Worship Radio: At Momentum Radio Conference",
+    description:
+      "This year, four members of our team will be attending the Momentum Radio Conference. This gathering brings together voices from across Christian radio, including artists, leaders, and ministries who are passionate about reaching people through music and media.",
+    time: "🕗 8:00 AM – 8:00 PM",
+    location: "📍 Florida, Orlando",
+    buttonText: "Register Slot",
+    buttonPage: "signup"
+  },
+
+  {
+    date: "Jun 17",
+    tag: "Worship Event",
+    title: "Big Daddy Weave Let It Begin Tour Brainerd MN",
+    description:
+      "Join Big Daddy Weave on the Let It Begin Tour, alongside special guests Megan Woods and David Leonard. Together, they will lead a night filled with powerful music and a message that speaks directly to your heart.",
+    time: "🕕 6:00 PM – 10:00 PM UTC+0",
+    location: "📍 Gichi-ziibi Center for the Arts",
+    buttonText: "Register Free",
+    buttonPage: "signup"
+  },
+
+  {
+    date: "Jun 28",
+    tag: "Worship Event",
+    title: "Solid Rock in the Park",
+    description:
+      "What makes Solid Rock in the Park in Pine City MN truly special is that it is completely free. Because of that, everyone is invited.",
+    time: "🕙 1:00 PM – 7:00 PM UTC+0",
+    location: "📍 Robinson Park in Pine City",
+    buttonText: "Register Free",
+    buttonPage: "signup"
+  },
+
+  {
+    date: "Jul 31",
+    tag: "Worship Event",
+    title: "Festival: ThriveFest North",
+    description:
+      "Join us in Jamestown, North Dakota, for Thrivefest North. Experience incredible live music, inspiring messages, and community.",
+    time: "🕘 12:00 PM – 10:00 PM",
+    location: "📍 Stutsman County Fairgrounds",
+    buttonText: "Register Free",
+    buttonPage: "signup"
+  },
+
+  {
+    date: "Aug 28",
+    tag: "Music Festival",
+    title: "Rural Music Festival",
+    description:
+      "Join us in Isle, Minnesota, for the Rural Music Festival, where music, energy, and connection come together.",
+    time: "🕙 11:00 AM – 10:00 PM",
+    location: "📍 Redemption Hill",
+    buttonText: "Register Free",
+    buttonPage: "signup"
+  },
+
+  {
+    date: "Aug 31",
+    tag: "Minnesota State Fair",
+    title: "Meet Global Worship Radio at the Minnesota State Fair",
+    description:
+      "Stop by our booth at the CrossRoads Chapel to connect with our team, receive prayer, and pick up a free Bible.",
+    time: "🕕 3:00 PM – 9:00 PM",
+    location: "📍 Minnesota State Fair",
+    buttonText: "Register Free",
+    buttonPage: "signup"
+  }
+  
+];
+
+function parseEventDate(dateStr) {
+  const months = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11
+  };
+
+  const [month, day] = dateStr.split(" ");
+  const currentYear = new Date().getFullYear();
+
+  const date = new Date(
+    currentYear,
+    months[month],
+    parseInt(day, 10)
+  );
+
+  if (isNaN(date.getTime())) {
+    console.warn("Invalid date:", dateStr);
+    return new Date();
+  }
+
+  return date;
+}
+
+function getSortedEvents() {
+  return [...eventsData].sort((a, b) => {
+    return parseEventDate(a.date) - parseEventDate(b.date);
+  });
+}
+
+function getUpcomingSortedEvents() {
+  return getSortedEvents().filter(event => {
+    const eventDate = parseEventDate(event.date);
+    return eventDate >= new Date();
+  });
+}
+
+function getPastEvents() {
+  const now = new Date();
+
+  return getSortedEvents().filter(event => {
+    const eventDate = parseEventDate(event.date);
+    return eventDate < now;
+  });
+}
+
+function renderEventsGrid() {
+  const container = document.getElementById("eventsGrid");
+
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  getUpcomingSortedEvents().forEach(event => {
+    container.innerHTML += `
+      <div class="event-card fade-in">
+        <div class="event-card-date">${event.date}</div>
+
+        <div class="event-card-body">
+          <span class="event-tag">${event.tag}</span>
+
+          <h4>${event.title}</h4>
+
+          <p>${event.description}</p>
+
+          <div class="event-card-meta">
+            <span>${event.time}</span>
+            <span>${event.location}</span>
+          </div>
+
+          <a href="#" class="btn btn-outline-sm"
+             data-page="${event.buttonPage}">
+             ${event.buttonText}
+          </a>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function renderHomeEvents() {
+  const container = document.getElementById("homeEventsList");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const featured = getUpcomingSortedEvents().slice(0, 3);
+
+  featured.forEach(event => {
+    const dayMonth = event.date.split(" ");
+    const day = dayMonth[0] || "";
+    const month = dayMonth[1] || "";
+
+    container.innerHTML += `
+      <div class="event-item fade-in">
+        <div class="event-date">
+          <span class="event-day">${day}</span>
+          <span class="event-month">${month}</span>
+        </div>
+
+        <div class="event-info">
+          <h4>${event.title}</h4>
+          <p>${event.time} | ${event.location}</p>
+        </div>
+
+        <a href="#" class="btn btn-sm" data-page="${event.buttonPage}">
+          ${event.buttonText}
+        </a>
+      </div>
+    `;
+  });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
@@ -153,6 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initCountdown();
   initListenLive();
   checkInitialPage();
+
+
+  renderEventsGrid();
+  renderHomeEvents();
+
 
 const signupForm = document.getElementById('signupForm');
   if (signupForm) signupForm.addEventListener('submit', (e) => handleFormSubmit(e, 'signup'));

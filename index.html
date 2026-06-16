@@ -20,9 +20,14 @@
 
   <header class="site-header" id="site-header">
     <nav class="navbar container">
+      <!--
       <a href="#" class="logo" data-page="home">
         <span class="logo-icon">📻</span>
         <span class="logo-text">Global Worship <strong>Radio</strong></span>
+      </a>
+      -->
+      <a href="#" class="logo" data-page="home">
+        <img src="assets\Images\logo.png" alt="Global Worship Radio Logo" class="logo-image" width="180" height="50" />
       </a>
 
       <ul class="nav-links" id="nav-links">
@@ -233,35 +238,7 @@
             <span class="section-label">What's On</span>
             <h2>Upcoming Events</h2>
           </div>
-          <div class="events-list">
-            <div class="event-item fade-in">
-              <div class="event-date"><span class="event-day">21</span><span class="event-month">May</span></div>
-              <div class="event-info">
-                <h4>Community Unity Night: Praise and Worship in Brainerd MN</h4>
-                <p>🗓 Thursday, 6:00 PM – 8:00 PM (UTC + 0) &nbsp;|&nbsp; 📍 Brainerd,
-                  , MN</p>
-              </div>
-              <a href="#" class="btn btn-sm" data-page="events">Register</a>
-            </div>
-            <div class="event-item fade-in">
-              <div class="event-date"><span class="event-day">26</span><span class="event-month">May</span></div>
-              <div class="event-info">
-                <h4>Global Worship at the Momentum Radio Conference</h4>
-                <p>🗓 Tuesday, 8:00 AM – 8:00 PM &nbsp;|&nbsp; 📍 Orlando, Florida.</p>
-              </div>
-              <a href="#" class="btn btn-sm" data-page="events">Register</a>
-            </div>
-            <div class="event-item fade-in">
-              <div class="event-date"><span class="event-day">17</span><span class="event-month">Jun</span></div>
-              <div class="event-info">
-                <h4>Big Daddy Weave Let It Begin Tour Brainerd MN
-                </h4>
-                <p>🗓 Wednesday, 6:00 A
-                  PM – 10:00 PM &nbsp;|&nbsp; 📍 Brainerd, MN</p>
-              </div>
-              <a href="#" class="btn btn-sm" data-page="events">Register</a>
-            </div>
-          </div>
+          <div class="events-list" id="homeEventsList"></div>
           <div class="section-cta">
             <a href="#" class="btn btn-primary" data-page="events">All Events</a>
           </div>
@@ -794,104 +771,8 @@
           <span class="section-label">All Events</span>
           <h2>Upcoming Events</h2>
         </div>
-        <div class="events-grid">
-          <div class="event-card fade-in">
-            <div class="event-card-date">May 26</div>
-            <div class="event-card-body">
-              <span class="event-tag">Momentum Radio Conference</span>
-              <h4>Global Worship Radio: At Momentum Radio Conference</h4>
-              <p>This year, four members of our team will be attending the Momentum Radio Conference. This gathering
-                brings together voices from across Christian radio, including artists, leaders, and ministries who are
-                passionate about reaching people through music and media. </p>
-              <div class="event-card-meta">
-                <span>🕗 8:00 AM – 8:00 PM</span>
-                <span>📍 Florida, Orlando</span>
-              </div>
-              <a href="#" class="btn btn-outline-sm" data-page="signup">Register Slot</a>
-            </div>
-          </div>
-          <div class="event-card fade-in">
-            <div class="event-card-date">Jun 17</div>
-            <div class="event-card-body">
-              <span class="event-tag">Worship Event</span>
-              <h4>Big Daddy Weave Let It Begin Tour Brainerd MN</h4>
-              <p>Join Big Daddy Weave on the Let It Begin Tour, alongside special guests Megan Woods and David Leonard.
-                Together, they will lead a night filled with powerful music and a message that speaks directly to your
-                heart.
-              </p>
-              <div class="event-card-meta">
-                <span>🕕 6:00 PM – 10:00 PM UTC+0</span>
-                <span>📍 Gichi-ziibi Center for the Arts</span>
-              </div>
-              <a href="#" class="btn btn-outline-sm" data-page="signup">Register Free</a>
-            </div>
-          </div>
-          <div class="event-card fade-in">
-            <div class="event-card-date">Jun 28</div>
-            <div class="event-card-body">
-              <span class="event-tag">Worship Event</span>
-              <h4>Solid Rock in the Park</h4>
-              <p>What makes Solid Rock in the Park in Pine City MN truly special is that it is completely free. Because
-                of that, everyone is invited. You can bring your family, invite your friends, and come as you are. Be
-                ready to worship and be encouraged.
-              </p>
-              <div class="event-card-meta">
-                <span>🕙 1:00 PM – 7:00 PM UTC+0</span>
-                <span>📍 Robinson Park in Pine City</span>
-              </div>
-              <a href="#" class="btn btn-outline-sm" data-page="signup">Register Free</a>
-            </div>
-          </div>
-          <div class="event-card fade-in">
-            <div class="event-card-date">Jul 31</div>
-            <div class="event-card-body">
-              <span class="event-tag">Worship Event</span>
-              <h4>Festival: ThriveFest North</h4>
-              <p>Join us in Jamestown, North Dakota, for Thrivefest North, happening July 31 through August 1 at the
-                Stutsman County Fairgrounds. Over the course of two days, you will experience incredible live music,
-                inspiring messages, and a community gathered to celebrate faith and hope.
-              </p>
-              <div class="event-card-meta">
-                <span>🕘 12:00 PM – 10:00 PM</span>
-                <span>📍 Stutsman County Fairgrounds</span>
-              </div>
-              <a href="#" class="btn btn-outline-sm" data-page="signup">Register Free</a>
-            </div>
-          </div>
-          <div class="event-card fade-in">
-            <div class="event-card-date">Aug 28</div>
-            <div class="event-card-body">
-              <span class="event-tag">Music Festival</span>
-              <h4>Rural Music Festival</h4>
-              <p>Join us in Isle, Minnesota, for the Rural Music Festival, where music, energy, and connection come
-                together. Throughout the event, you will enjoy live performances from talented artists, creating a fun
-                and welcoming environment for all ages.
-              </p>
-              <div class="event-card-meta">
-                <span>🕙 11:00 AM – 10:00 PM</span>
-                <span>📍 Redemption Hill</span>
-              </div>
-              <a href="#" class="btn btn-outline-sm" data-page="signup">Register Free</a>
-            </div>
-          </div>
-          <div class="event-card fade-in">
-            <div class="event-card-date">Aug 31</div>
-            <div class="event-card-body">
-              <span class="event-tag">Minnesota State Fair</span>
-              <h4>Meet Global Worship Radio at the Minnesota State Fair</h4>
-              <p>Stop by our booth at the CrossRoads Chapel on Monday, August 31 to connect with our team, receive
-                prayer, learn about the gospel bracelets and pick up a free Bible. We’d love to meet you, listen to your
-                testimony, encourage you, and share hope while you explore all the fair has to offer.
-              </p>
-              <div class="event-card-meta">
-                <span>🕕 3:00 PM – 9:00 PM</span>
-                <span>📍 Minnesota State Fair</span>
-              </div>
-              <a href="#" class="btn btn-outline-sm" data-page="signup">Register Free</a>
-            </div>
-          </div>
-        </div>
-      </div>
+        <div class="events-grid" id="eventsGrid"></div>
+
     </section>
 
     <section class="page" id="page-resources">
@@ -982,7 +863,7 @@
               <h4>You’re Not Alone</h4>
               <p>A comforting audio reminder that God is always near, even in your hardest and quietest moments. Take a
                 moment to be encouraged and renewed.</p>
-              <a href="https://globalworshipradio.com/podcast/not-alone-episode/" class="btn btn-outline-sm">Listen
+              <a href="https://globalworshipradio.com/category/podcast/not-alone/" class="btn btn-outline-sm">Listen
                 Now</a>
             </div>
           </div>
@@ -1145,10 +1026,19 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
+          <!--
           <a href="#" class="logo" data-page="home">
             <span class="logo-icon">📻</span>
             <span class="logo-text">Global Worship <strong>Radio</strong></span>
           </a>
+          -->
+
+          <a href="#" class="logo logo-footer" data-page="home">
+            <img src="assets/Images/logo.png" alt="Global Worship Radio Logo" class="logo-image logo-image-footer"
+              width="140" height="40">
+          </a>
+
+
           <p>Friends from around the world connected in prayer, Word and worship of Jesus</p>
           <div class="social-icons">
             <a href="https://www.facebook.com/GlobalWorshipFamily" class="social-icon" aria-label="Facebook">

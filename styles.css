@@ -200,8 +200,17 @@ textarea { resize: vertical; }
   gap: 8px;
   text-decoration: none;
   flex-shrink: 0;
+  transition: opacity 0.3s ease;
 }
-.logo-icon { font-size: 1.5rem; }
+.logo:hover { opacity: 0.8; }
+/* NEW: Logo Image styling */
+.logo-image {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+.logo-icon { font-size: 1.5rem; display :none; }
 .logo-text {
   font-family: var(--font-head);
   font-size: 1.4rem;
@@ -209,6 +218,14 @@ textarea { resize: vertical; }
   font-weight: 400;
 }
 .logo-text strong { color: var(--primary); }
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .logo-image {
+    height: 40px;
+    width: auto;
+  }
+}
+
 
 .nav-links {
   display: flex;
