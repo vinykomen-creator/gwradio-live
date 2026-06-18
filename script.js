@@ -148,6 +148,8 @@ const eventsData = [
   
   {
     date: "May 26",
+    start: "08:00",
+    end: "20:00",
     tag: "Momentum Radio Conference",
     title: "Global Worship Radio: At Momentum Radio Conference",
     description:
@@ -160,6 +162,9 @@ const eventsData = [
 
   {
     date: "Jun 17",
+
+    start: "18:00",
+    end: "22:00",
     tag: "Worship Event",
     title: "Big Daddy Weave Let It Begin Tour Brainerd MN",
     description:
@@ -172,6 +177,9 @@ const eventsData = [
 
   {
     date: "Jun 28",
+    start: "01:00",
+    end: "19:00",
+
     tag: "Worship Event",
     title: "Solid Rock in the Park",
     description:
@@ -184,6 +192,8 @@ const eventsData = [
 
   {
     date: "Jul 31",
+    start: "12:00",
+    end: "22:00",
     tag: "Worship Event",
     title: "Festival: ThriveFest North",
     description:
@@ -196,6 +206,8 @@ const eventsData = [
 
   {
     date: "Aug 28",
+    start: "11:00",
+    end: "22:00",
     tag: "Music Festival",
     title: "Rural Music Festival",
     description:
@@ -208,6 +220,8 @@ const eventsData = [
 
   {
     date: "Aug 31",
+    start: "15:00",
+    end: "21:00",
     tag: "Minnesota State Fair",
     title: "Meet Global Worship Radio at the Minnesota State Fair",
     description:
@@ -253,18 +267,61 @@ function parseEventDate(dateStr) {
   return date;
 }
 
+function parseEventDateTime(event) {
+  const [month, day] = event.date.split(" ");
+  const currentYear = new Date().getFullYear();
+
+  const [startHour, startMin] = event.start.split(":");
+  const [endHour, endMin] = event.end.split(":");
+
+  const months = {
+    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+  };
+
+  const start = new Date(
+    currentYear,
+    months[month],
+    parseInt(day),
+    parseInt(startHour),
+    parseInt(startMin)
+  );
+
+  const end = new Date(
+    currentYear,
+    months[month],
+    parseInt(day),
+    parseInt(endHour),
+    parseInt(endMin)
+  );
+
+  return { start, end };
+}
+
+function getEventStatus(event) {
+  const now = new Date();
+  const { start, end } = parseEventDateTime(event);
+
+  if (now < start) {
+    return "upcoming";
+  }
+
+  if (now >= start && now <= end) {
+    return "live";
+  }
+
+  return "ended";
+}
+
 function getSortedEvents() {
   return [...eventsData].sort((a, b) => {
     return parseEventDate(a.date) - parseEventDate(b.date);
   });
 }
 
-function getUpcomingSortedEvents() {
-  return getSortedEvents().filter(event => {
-    const eventDate = parseEventDate(event.date);
-    return eventDate >= new Date();
-  });
-}
+getSortedEvents().filter(event => {
+  return getEventStatus(event) !== "ended";
+});
 
 function getPastEvents() {
   const now = new Date();
@@ -282,7 +339,8 @@ function renderEventsGrid() {
 
   container.innerHTML = "";
 
-  getUpcomingSortedEvents().forEach(event => {
+  getSortedEvents().forEach(event => {
+  if (getEventStatus(event) === "ended") return;
     container.innerHTML += `
       <div class="event-card fade-in">
         <div class="event-card-date">${event.date}</div>
@@ -290,7 +348,10 @@ function renderEventsGrid() {
         <div class="event-card-body">
           <span class="event-tag">${event.tag}</span>
 
-          <h4>${event.title}</h4>
+          <h4>
+          ${event.title}
+          ${getEventStatus(event) === "live" ? '<span class="live-badge">🔴 LIVE</span>' : ''}
+         </h4>
 
           <p>${event.description}</p>
 
@@ -315,7 +376,9 @@ function renderHomeEvents() {
 
   container.innerHTML = "";
 
-  const featured = getUpcomingSortedEvents().slice(0, 3);
+  const featured = getSortedEvents()
+  .filter(e => getEventStatus(e) !== "ended")
+  .slice(0, 3);
 
   featured.forEach(event => {
     const dayMonth = event.date.split(" ");
@@ -330,6 +393,7 @@ function renderHomeEvents() {
         </div>
 
         <div class="event-info">
+        ${getEventStatus(event) === "live" ? " 🔴 LIVE NOW" : ""}
           <h4>${event.title}</h4>
           <p>${event.time} | ${event.location}</p>
         </div>
