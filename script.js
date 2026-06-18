@@ -156,6 +156,7 @@ const eventsData = [
       "This year, four members of our team will be attending the Momentum Radio Conference. This gathering brings together voices from across Christian radio, including artists, leaders, and ministries who are passionate about reaching people through music and media.",
     time: "🕗 8:00 AM – 8:00 PM",
     location: "📍 Florida, Orlando",
+    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
     buttonText: "Register Slot",
     buttonPage: "signup"
   },
@@ -171,6 +172,7 @@ const eventsData = [
       "Join Big Daddy Weave on the Let It Begin Tour, alongside special guests Megan Woods and David Leonard. Together, they will lead a night filled with powerful music and a message that speaks directly to your heart.",
     time: "🕕 6:00 PM – 10:00 PM UTC+0",
     location: "📍 Gichi-ziibi Center for the Arts",
+    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
     buttonText: "Register Free",
     buttonPage: "signup"
   },
@@ -186,6 +188,7 @@ const eventsData = [
       "What makes Solid Rock in the Park in Pine City MN truly special is that it is completely free. Because of that, everyone is invited.",
     time: "🕙 1:00 PM – 7:00 PM UTC+0",
     location: "📍 Robinson Park in Pine City",
+    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
     buttonText: "Register Free",
     buttonPage: "signup"
   },
@@ -200,6 +203,7 @@ const eventsData = [
       "Join us in Jamestown, North Dakota, for Thrivefest North. Experience incredible live music, inspiring messages, and community.",
     time: "🕘 12:00 PM – 10:00 PM",
     location: "📍 Stutsman County Fairgrounds",
+    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
     buttonText: "Register Free",
     buttonPage: "signup"
   },
@@ -214,6 +218,7 @@ const eventsData = [
       "Join us in Isle, Minnesota, for the Rural Music Festival, where music, energy, and connection come together.",
     time: "🕙 11:00 AM – 10:00 PM",
     location: "📍 Redemption Hill",
+    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
     buttonText: "Register Free",
     buttonPage: "signup"
   },
@@ -228,6 +233,7 @@ const eventsData = [
       "Stop by our booth at the CrossRoads Chapel to connect with our team, receive prayer, and pick up a free Bible.",
     time: "🕕 3:00 PM – 9:00 PM",
     location: "📍 Minnesota State Fair",
+    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
     buttonText: "Register Free",
     buttonPage: "signup"
   }
@@ -313,6 +319,23 @@ function getEventStatus(event) {
   return "ended";
 }
 
+function getFeaturedEvent() {
+
+  const events = getSortedEvents();
+
+  const liveEvent = events.find(
+    event => getEventStatus(event) === "live"
+  );
+
+  if (liveEvent) {
+    return liveEvent;
+  }
+
+  return events.find(
+    event => getEventStatus(event) === "upcoming"
+  ) || null;
+}
+
 function getSortedEvents() {
   return [...eventsData].sort((a, b) => {
     return parseEventDate(a.date) - parseEventDate(b.date);
@@ -330,6 +353,31 @@ function getPastEvents() {
     const eventDate = parseEventDate(event.date);
     return eventDate < now;
   });
+}
+
+function renderFeaturedEvent() {
+
+  const event = getFeaturedEvent();
+
+  if (!event) return;
+
+  document.getElementById("featuredTitle").textContent =
+    event.title;
+
+  document.getElementById("featuredDescription").textContent =
+    event.description;
+
+  document.getElementById("featuredDateTime").textContent =
+    `${event.date} • ${event.time}`;
+
+  document.getElementById("featuredLocation").textContent =
+    event.location;
+
+  const button = document.getElementById("featuredButton");
+
+  button.textContent = event.buttonText;
+
+  button.href = event.buttonUrl || "#";
 }
 
 function renderEventsGrid() {
@@ -419,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderEventsGrid();
   renderHomeEvents();
+  renderFeaturedEvent();
 
 
 const signupForm = document.getElementById('signupForm');
@@ -543,37 +592,65 @@ function observeFadeIns() {
 }
 
 function initCountdown() {
-  const target = new Date('2026-06-18T09:00:00');
 
   function updateCountdown() {
+
+    const featuredEvent = getFeaturedEvent();
+
+    if (!featuredEvent) {
+      ["cd-days", "cd-hours", "cd-mins", "cd-secs"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = "00";
+      });
+      return;
+    }
+
+    const { start } = parseEventDateTime(featuredEvent);
+
     const now = new Date();
-    const diff = target - now;
+    const diff = start - now;
 
     if (diff <= 0) {
-      ['cd-days', 'cd-hours', 'cd-mins', 'cd-secs'].forEach(id => {
+      ["cd-days", "cd-hours", "cd-mins", "cd-secs"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.textContent = '00';
+        if (el) el.textContent = "00";
       });
       return;
     }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const set = (id, val) => {
+    const hours = Math.floor(
+      (diff % (1000 * 60 * 60 * 24)) /
+      (1000 * 60 * 60)
+    );
+
+    const mins = Math.floor(
+      (diff % (1000 * 60 * 60)) /
+      (1000 * 60)
+    );
+
+    const secs = Math.floor(
+      (diff % (1000 * 60)) /
+      1000
+    );
+
+    const set = (id, value) => {
       const el = document.getElementById(id);
-      if (el) el.textContent = String(val).padStart(2, '0');
+
+      if (el) {
+        el.textContent = String(value).padStart(2, "0");
+      }
     };
 
-    set('cd-days', days);
-    set('cd-hours', hours);
-    set('cd-mins', mins);
-    set('cd-secs', secs);
+    set("cd-days", days);
+    set("cd-hours", hours);
+    set("cd-mins", mins);
+    set("cd-secs", secs);
   }
 
   updateCountdown();
+
   setInterval(updateCountdown, 1000);
 }
 
