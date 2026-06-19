@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="assets\Images\favicon-32x32.png" type="image/x-icon" />
-  <title>Global Worship Radio | Global Street Team</title>
+  <title>Global Worship Radio | Connected Through Prayer, Word & Worship</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
@@ -20,12 +20,6 @@
 
   <header class="site-header" id="site-header">
     <nav class="navbar container">
-      <!--
-      <a href="#" class="logo" data-page="home">
-        <span class="logo-icon">📻</span>
-        <span class="logo-text">Global Worship <strong>Radio</strong></span>
-      </a>
-      -->
       <a href="#" class="logo" data-page="home">
         <img src="assets\Images\logo.png" alt="Global Worship Radio Logo" class="logo-image" width="180" height="50" />
       </a>
@@ -62,7 +56,7 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
         <path d="M8 5v14l11-7z" />
       </svg>
-      Now Playing — Global Street Team
+      Live on Global Worship Radio
     </a>
   </div>
 
@@ -756,6 +750,7 @@
               Big Daddy Weave is more than a concert - it’s a night you cannot afford to miss. This is your invitation
               to experience a powerful evening of worship, hope, and life-changing moments in the Brainerd Lakes Area.
             </p>
+            <div id="countdownStatus" class="countdown-status"></div>
             <div class="countdown" id="countdown">
               <div class="countdown-unit"><span id="cd-days">00</span><small>Days</small></div>
               <div class="countdown-unit"><span id="cd-hours">00</span><small>Hours</small></div>
@@ -782,6 +777,25 @@
           <h2>Upcoming Events</h2>
         </div>
         <div class="events-grid" id="eventsGrid"></div>
+
+    </section>
+
+    <section class="page" id="page-ticket-giveaway">
+
+      <div class="container">
+
+        <h2>Ticket Giveaway</h2>
+
+        <p>
+          🚧 This page is currently under development.
+          Visit <a href="https://globalworshipradio.com" target="_blank"
+            rel="noopener noreferrer">globalworshipradio.com</a> and enter today's emoji code for your chance to win
+          tickets.
+          Giveaway entries will open soon!
+
+        </p>
+
+      </div>
 
     </section>
 
@@ -1036,13 +1050,6 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <!--
-          <a href="#" class="logo" data-page="home">
-            <span class="logo-icon">📻</span>
-            <span class="logo-text">Global Worship <strong>Radio</strong></span>
-          </a>
-          -->
-
           <a href="#" class="logo logo-footer" data-page="home">
             <img src="assets/Images/logo.png" alt="Global Worship Radio Logo" class="logo-image logo-image-footer"
               width="140" height="40">
@@ -1173,6 +1180,7 @@
 
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 
 </body>

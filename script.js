@@ -7,15 +7,25 @@ const GWR = {
   pauseAutoHideTimer: null
 };
 
+let EVENTS_CACHE = [];
+let EVENTS_LOADED = false;
+const SUPABASE_URL = "https://dieunopidtcxjsvjxpbs.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRpZXVub3BpZHRjeGpzdmp4cGJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MjYxMzgsImV4cCI6MjA5NTEwMjEzOH0.LatWVvrUraIYeI8tAa9fMgiW12SIKO74KRrhx5GdBW0";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
 const STREAM_URL = "https://s5.radio.co/s0cc043163/listen";
 
 
 function initRadioPlayer() {
-  if (GWR.audio) return; 
+  if (GWR.audio) return;
 
   GWR.audio = new Audio(STREAM_URL);
   GWR.audio.crossOrigin = "anonymous";
-  GWR.audio.preload = "none"; 
+  GWR.audio.preload = "none";
   GWR.audio.addEventListener("play", () => {
     GWR.isPlaying = true;
     clearAutoHideTimer();
@@ -112,12 +122,12 @@ function syncAllPlayerUI() {
 }
 
 function syncMiniPlayerUI() {
-  const playIcon  = document.getElementById('mini-play-icon');
+  const playIcon = document.getElementById('mini-play-icon');
   const pauseIcon = document.getElementById('mini-pause-icon');
-  const mp        = document.getElementById('gwr-mini-player');
+  const mp = document.getElementById('gwr-mini-player');
   if (!mp) return;
 
-  if (playIcon)  playIcon.style.display  = GWR.isPlaying ? 'none'  : 'block';
+  if (playIcon) playIcon.style.display = GWR.isPlaying ? 'none' : 'block';
   if (pauseIcon) pauseIcon.style.display = GWR.isPlaying ? 'block' : 'none';
   mp.classList.toggle('paused', !GWR.isPlaying);
 }
@@ -143,102 +153,6 @@ function miniExpandToFull() {
   hideMiniPlayer();
   showListenModal();
 }
-
-const eventsData = [
-  
-  {
-    date: "May 26",
-    start: "08:00",
-    end: "20:00",
-    tag: "Momentum Radio Conference",
-    title: "Global Worship Radio: At Momentum Radio Conference",
-    description:
-      "This year, four members of our team will be attending the Momentum Radio Conference. This gathering brings together voices from across Christian radio, including artists, leaders, and ministries who are passionate about reaching people through music and media.",
-    time: "🕗 8:00 AM – 8:00 PM",
-    location: "📍 Florida, Orlando",
-    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
-    buttonText: "Register Slot",
-    buttonPage: "signup"
-  },
-
-  {
-    date: "Jun 17",
-
-    start: "18:00",
-    end: "22:00",
-    tag: "Worship Event",
-    title: "Big Daddy Weave Let It Begin Tour Brainerd MN",
-    description:
-      "Join Big Daddy Weave on the Let It Begin Tour, alongside special guests Megan Woods and David Leonard. Together, they will lead a night filled with powerful music and a message that speaks directly to your heart.",
-    time: "🕕 6:00 PM – 10:00 PM UTC+0",
-    location: "📍 Gichi-ziibi Center for the Arts",
-    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
-    buttonText: "Register Free",
-    buttonPage: "signup"
-  },
-
-  {
-    date: "Jun 28",
-    start: "01:00",
-    end: "19:00",
-
-    tag: "Worship Event",
-    title: "Solid Rock in the Park",
-    description:
-      "What makes Solid Rock in the Park in Pine City MN truly special is that it is completely free. Because of that, everyone is invited.",
-    time: "🕙 1:00 PM – 7:00 PM UTC+0",
-    location: "📍 Robinson Park in Pine City",
-    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
-    buttonText: "Register Free",
-    buttonPage: "signup"
-  },
-
-  {
-    date: "Jul 31",
-    start: "12:00",
-    end: "22:00",
-    tag: "Worship Event",
-    title: "Festival: ThriveFest North",
-    description:
-      "Join us in Jamestown, North Dakota, for Thrivefest North. Experience incredible live music, inspiring messages, and community.",
-    time: "🕘 12:00 PM – 10:00 PM",
-    location: "📍 Stutsman County Fairgrounds",
-    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
-    buttonText: "Register Free",
-    buttonPage: "signup"
-  },
-
-  {
-    date: "Aug 28",
-    start: "11:00",
-    end: "22:00",
-    tag: "Music Festival",
-    title: "Rural Music Festival",
-    description:
-      "Join us in Isle, Minnesota, for the Rural Music Festival, where music, energy, and connection come together.",
-    time: "🕙 11:00 AM – 10:00 PM",
-    location: "📍 Redemption Hill",
-    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
-    buttonText: "Register Free",
-    buttonPage: "signup"
-  },
-
-  {
-    date: "Aug 31",
-    start: "15:00",
-    end: "21:00",
-    tag: "Minnesota State Fair",
-    title: "Meet Global Worship Radio at the Minnesota State Fair",
-    description:
-      "Stop by our booth at the CrossRoads Chapel to connect with our team, receive prayer, and pick up a free Bible.",
-    time: "🕕 3:00 PM – 9:00 PM",
-    location: "📍 Minnesota State Fair",
-    buttonUrl: "https://gwr-giveaway-portal.netlify.app/",
-    buttonText: "Register Free",
-    buttonPage: "signup"
-  }
-  
-];
 
 function parseEventDate(dateStr) {
   const months = {
@@ -274,32 +188,30 @@ function parseEventDate(dateStr) {
 }
 
 function parseEventDateTime(event) {
-  const [month, day] = event.date.split(" ");
+
+  if (!event) {
+    return {
+      start: new Date(),
+      end: new Date()
+    };
+  }
+
   const currentYear = new Date().getFullYear();
 
-  const [startHour, startMin] = event.start.split(":");
-  const [endHour, endMin] = event.end.split(":");
+  const dateStr = event.date || "";
+  const startStr = event.start_time || "00:00";
+  const endStr = event.end_time || "00:00";
 
-  const months = {
-    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
-    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-  };
+  const baseDate = new Date(`${dateStr} ${currentYear}`);
 
-  const start = new Date(
-    currentYear,
-    months[month],
-    parseInt(day),
-    parseInt(startHour),
-    parseInt(startMin)
-  );
+  const [startHour, startMin] = startStr.split(":").map(Number);
+  const [endHour, endMin] = endStr.split(":").map(Number);
 
-  const end = new Date(
-    currentYear,
-    months[month],
-    parseInt(day),
-    parseInt(endHour),
-    parseInt(endMin)
-  );
+  const start = new Date(baseDate);
+  start.setHours(startHour || 0, startMin || 0, 0);
+
+  const end = new Date(baseDate);
+  end.setHours(endHour || 0, endMin || 0, 0);
 
   return { start, end };
 }
@@ -319,119 +231,283 @@ function getEventStatus(event) {
   return "ended";
 }
 
-function getFeaturedEvent() {
+function getEventCTA(event) {
 
-  const events = getSortedEvents();
-
-  const liveEvent = events.find(
-    event => getEventStatus(event) === "live"
-  );
-
-  if (liveEvent) {
-    return liveEvent;
+  if (!event) {
+    return {
+      text: "View Events",
+      page: "events"
+    };
   }
 
-  return events.find(
-    event => getEventStatus(event) === "upcoming"
-  ) || null;
+  const status = getEventStatus(event);
+
+  /*
+   LIVE EVENTS
+  */
+  if (status === "live") {
+    return {
+      text: "Contact Us",
+      page: event.contact_page || "contact"
+    };
+  }
+
+  /*
+   GIVEAWAYS
+  */
+  if (event.is_giveaway === true) {
+    return {
+      text: "Enter Giveaway",
+      page: event.giveaway_page || "ticket-giveaway"
+    };
+  }
+
+  /*
+   NORMAL EVENTS
+  */
+  return {
+    text: event.button_text || "Buy Tickets",
+    url: event.button_url || "#"
+  };
 }
 
-function getSortedEvents() {
-  return [...eventsData].sort((a, b) => {
-    return parseEventDate(a.date) - parseEventDate(b.date);
-  });
-}
-
-getSortedEvents().filter(event => {
-  return getEventStatus(event) !== "ended";
-});
-
-function getPastEvents() {
+function getEventBrain(events) {
   const now = new Date();
 
-  return getSortedEvents().filter(event => {
-    const eventDate = parseEventDate(event.date);
-    return eventDate < now;
+  const sorted = [...events].sort((a, b) => {
+    const aStart = parseEventDateTime(a).start;
+    const bStart = parseEventDateTime(b).start;
+    return aStart - bStart;
   });
+
+  let liveEvent = null;
+  let nextEvent = null;
+
+  for (const event of sorted) {
+    const status = getEventStatus(event);
+
+    if (status === "live") {
+      liveEvent = event;
+      break;
+    }
+
+    if (!nextEvent && status === "upcoming") {
+      nextEvent = event;
+    }
+  }
+
+  return {
+    featured: liveEvent || nextEvent || null,
+    live: liveEvent,
+    next: nextEvent,
+    all: sorted
+  };
 }
 
-function renderFeaturedEvent() {
+async function getFeaturedEvent() {
+  const { data, error } = await supabaseClient
+    .from('events')
+    .select('*');
 
-  const event = getFeaturedEvent();
+  if (error || !data || data.length === 0) {
+    console.error("No Supabase events found:", error);
+    return null;
+  }
+
+  const upcoming = data
+    .filter(e => getEventStatus(e) !== "ended")
+    .sort((a, b) => {
+      const aTime = parseEventDateTime(a).start;
+      const bTime = parseEventDateTime(b).start;
+      return aTime - bTime;
+    });
+
+  return upcoming[0] || null;
+}
+
+async function fetchEvents(force = false) {
+  if (EVENTS_LOADED && !force) {
+    return EVENTS_CACHE;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('events')
+    .select('*');
+
+  if (error) {
+    console.error("Supabase fetch error:", error);
+    return [];
+  }
+
+  EVENTS_CACHE = data || [];
+  EVENTS_LOADED = true;
+
+  return EVENTS_CACHE;
+}
+
+function getLiveBadge(event) {
+  return getEventStatus(event) === "live"
+    ? '<span class="live-badge">🔴 LIVE</span>'
+    : '';
+}
+
+async function renderFeaturedEvent() {
+  const events = EVENTS_CACHE;
+
+  if (!events || events.length === 0) return;
+
+  const brain = getEventBrain(events);
+  const event = brain?.featured;
 
   if (!event) return;
 
-  document.getElementById("featuredTitle").textContent =
-    event.title;
-
-  document.getElementById("featuredDescription").textContent =
-    event.description;
-
-  document.getElementById("featuredDateTime").textContent =
-    `${event.date} • ${event.time}`;
-
-  document.getElementById("featuredLocation").textContent =
-    event.location;
-
+  const title = document.getElementById("featuredTitle");
+  const description = document.getElementById("featuredDescription");
+  const dateTime = document.getElementById("featuredDateTime");
+  const location = document.getElementById("featuredLocation");
   const button = document.getElementById("featuredButton");
+  const badge = document.getElementById("featuredBadge");
 
-  button.textContent = event.buttonText;
+  if (title) title.textContent = event.title;
+  if (description) description.textContent = event.description;
+  if (dateTime) {
+    dateTime.textContent =
+      `${event.date} • ${event.start_time} - ${event.end_time}`;
+  }
+  if (location) location.textContent = event.location;
 
-  button.href = event.buttonUrl || "#";
+  if (button) {
+    const cta = getEventCTA(event);
+
+    button.textContent = cta.text || "View Events";
+
+    button.onclick = null;
+    button.removeAttribute("href");
+
+    if (cta.page) {
+      button.onclick = (e) => {
+        e.preventDefault();
+        navigateTo(cta.page);
+      };
+    } else if (cta.url) {
+      button.href = cta.url;
+      button.target = "_blank";
+      button.rel = "noopener";
+    }
+  }
+
+  if (badge) {
+    badge.textContent = brain.live
+      ? "🔴 LIVE NOW"
+      : "⭐ Featured Event";
+  }
 }
 
-function renderEventsGrid() {
+async function renderEventsGrid() {
   const container = document.getElementById("eventsGrid");
 
   if (!container) return;
 
+  const events = EVENTS_CACHE || [];
+
   container.innerHTML = "";
 
-  getSortedEvents().forEach(event => {
-  if (getEventStatus(event) === "ended") return;
+  const upcoming = events
+    .filter(event => getEventStatus(event) !== "ended")
+    .sort((a, b) => {
+      return (
+        parseEventDateTime(a).start -
+        parseEventDateTime(b).start
+      );
+    });
+
+  if (upcoming.length === 0) {
+    container.innerHTML = `
+      <div class="event-empty-state">
+        <p>No upcoming events at the moment.</p>
+      </div>
+    `;
+    return;
+  }
+
+  upcoming.forEach(event => {
     container.innerHTML += `
       <div class="event-card fade-in">
-        <div class="event-card-date">${event.date}</div>
+        <div class="event-card-date">
+          ${event.date}
+        </div>
 
         <div class="event-card-body">
-          <span class="event-tag">${event.tag}</span>
+          <span class="event-tag">
+            ${event.tag}
+          </span>
 
           <h4>
-          ${event.title}
-          ${getEventStatus(event) === "live" ? '<span class="live-badge">🔴 LIVE</span>' : ''}
-         </h4>
+            ${event.title}
+            ${getLiveBadge(event)}
+          </h4>
 
-          <p>${event.description}</p>
+          <p>
+            ${event.description}
+          </p>
 
           <div class="event-card-meta">
-            <span>${event.time}</span>
-            <span>${event.location}</span>
+            <span>
+              🕒 ${event.start_time} – ${event.end_time}
+            </span>
+
+            <span>
+              ${event.location}
+            </span>
           </div>
 
-          <a href="#" class="btn btn-outline-sm"
-             data-page="${event.buttonPage}">
-             ${event.buttonText}
-          </a>
+          ${(() => {
+
+        const cta = getEventCTA(event);
+
+        if (cta.page) {
+          return `
+      <a href="#"
+         class="btn btn-outline-sm"
+         data-page="${cta.page}">
+         ${cta.text}
+      </a>
+    `;
+        }
+
+        return `
+    <a href="${cta.url}"
+       class="btn btn-outline-sm"
+       target="_blank"
+       rel="noopener">
+       ${cta.text}
+    </a>
+  `;
+
+      })()}
         </div>
       </div>
     `;
   });
+
+  observeFadeIns();
 }
 
-function renderHomeEvents() {
+async function renderHomeEvents() {
   const container = document.getElementById("homeEventsList");
   if (!container) return;
 
+  const events = EVENTS_CACHE;
+
   container.innerHTML = "";
 
-  const featured = getSortedEvents()
-  .filter(e => getEventStatus(e) !== "ended")
-  .slice(0, 3);
+  const brain = getEventBrain(events);
+  const featured = brain.all
+    .filter(e => getEventStatus(e) !== "ended")
+    .slice(0, 3);
 
   featured.forEach(event => {
-    const dayMonth = event.date.split(" ");
-    const day = dayMonth[0] || "";
-    const month = dayMonth[1] || "";
+    const [day, month] = event.date.split(" ");
 
     container.innerHTML += `
       <div class="event-item fade-in">
@@ -441,36 +517,57 @@ function renderHomeEvents() {
         </div>
 
         <div class="event-info">
-        ${getEventStatus(event) === "live" ? " 🔴 LIVE NOW" : ""}
           <h4>${event.title}</h4>
-          <p>${event.time} | ${event.location}</p>
+          <p>${event.start_time} | ${event.location}</p>
         </div>
 
-        <a href="#" class="btn btn-sm" data-page="${event.buttonPage}">
-          ${event.buttonText}
-        </a>
+        ${(() => {
+
+        const cta = getEventCTA(event);
+
+        if (cta.page) {
+          return `
+      <a href="#"
+         class="btn btn-outline-sm"
+         data-page="${cta.page}">
+         ${cta.text}
+      </a>
+    `;
+        }
+
+        return `
+    <a href="${cta.url}"
+       class="btn btn-outline-sm"
+       target="_blank"
+       rel="noopener">
+       ${cta.text}
+    </a>
+  `;
+
+      })()}
       </div>
     `;
   });
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initNavigation();
   initHamburger();
   initScrollEffects();
   initFadeInObserver();
   initCountdown();
   initListenLive();
+
+
+  await fetchEvents(true);
+
+  await renderEventsGrid();
+  await renderHomeEvents();
+  await renderFeaturedEvent();
+
   checkInitialPage();
 
-
-  renderEventsGrid();
-  renderHomeEvents();
-  renderFeaturedEvent();
-
-
-const signupForm = document.getElementById('signupForm');
+  const signupForm = document.getElementById('signupForm');
   if (signupForm) signupForm.addEventListener('submit', (e) => handleFormSubmit(e, 'signup'));
 
   const contactForm = document.getElementById('contactForm');
@@ -518,13 +615,14 @@ function updateTitle(page) {
     training: 'Training Programs | Global Worship Radio',
     events: 'Events | Global Worship Radio',
     resources: 'Resources | Global Worship Radio',
-    contact: 'Contact Us | Global Worship Radio'
+    contact: 'Contact Us | Global Worship Radio',
+    'ticket-giveaway': 'Ticket Giveaway | Global Worship Radio'
   };
   document.title = titles[page] || 'Global Worship Radio';
 }
 
 function checkInitialPage() {
-  
+
   navigateTo('home');
 }
 
@@ -555,7 +653,7 @@ function initScrollEffects() {
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
 
-    
+
     header.classList.toggle('scrolled', scrollY > 20);
 
     lastScroll = scrollY;
@@ -593,9 +691,12 @@ function observeFadeIns() {
 
 function initCountdown() {
 
-  function updateCountdown() {
+  async function updateCountdown() {
 
-    const featuredEvent = getFeaturedEvent();
+    const brain = getEventBrain(EVENTS_CACHE);
+    const featuredEvent = brain.featured;
+    const statusEl = document.getElementById("countdownStatus");
+    const countdownEl = document.getElementById("countdown");
 
     if (!featuredEvent) {
       ["cd-days", "cd-hours", "cd-mins", "cd-secs"].forEach(id => {
@@ -606,6 +707,29 @@ function initCountdown() {
     }
 
     const { start } = parseEventDateTime(featuredEvent);
+
+    const status = getEventStatus(featuredEvent);
+
+    if (status === "live") {
+
+      if (statusEl) {
+        statusEl.textContent = "🔴 LIVE NOW • Join the experience";
+      }
+
+      if (countdownEl) {
+        countdownEl.style.display = "none";
+      }
+
+      return;
+    }
+
+    if (statusEl) {
+      statusEl.textContent = "Starts In";
+    }
+
+    if (countdownEl) {
+      countdownEl.style.display = "flex";
+    }
 
     const now = new Date();
     const diff = start - now;
@@ -666,7 +790,7 @@ function initListenLive() {
 }
 
 function showListenModal() {
-  hideMiniPlayer(); 
+  hideMiniPlayer();
 
   let overlay = document.getElementById('listen-overlay');
 
@@ -842,7 +966,7 @@ document.addEventListener('keydown', (e) => {
   }
   // Spacebar toggle when mini player is visible + no input focused
   if (e.code === 'Space' && GWR.miniVisible &&
-      !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)) {
+    !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) {
     e.preventDefault();
     toggleRadio();
   }
@@ -885,23 +1009,23 @@ function handleNewsletterSubmit(event) {
       source: 'footer'
     })
   })
-  .then(async (res) => {
-    const data = await res.json();
+    .then(async (res) => {
+      const data = await res.json();
 
-    if (!res.ok) {
-      throw new Error(data.message || 'Subscription failed');
-    }
+      if (!res.ok) {
+        throw new Error(data.message || 'Subscription failed');
+      }
 
-    return data;
-  })
-  .then((data) => {
-    showToast(data.message || 'Successfully subscribed!', 'success');
-    event.target.reset();
-  })
-  .catch((err) => {
-    console.error(err);
-    showToast(err.message || 'Server connection error', 'error');
-  });
+      return data;
+    })
+    .then((data) => {
+      showToast(data.message || 'Successfully subscribed!', 'success');
+      event.target.reset();
+    })
+    .catch((err) => {
+      console.error(err);
+      showToast(err.message || 'Server connection error', 'error');
+    });
 }
 
 async function handleFormSubmit(event, type) {
