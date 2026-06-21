@@ -320,9 +320,6 @@ function getEventActions(event) {
     return actions;
   }
 
-  /*
-   * NORMAL EVENTS
-   */
   if (event.button_url && event.button_url !== "#") {
     return {
       primary: {
@@ -340,36 +337,46 @@ function getEventActions(event) {
   };
 }
 
-function getEventBrain(events) {
-  const now = new Date();
+function getEventBrain(events = []) {
 
-  const sorted = [...events].sort((a, b) => {
-    const aStart = parseEventDateTime(a).start;
-    const bStart = parseEventDateTime(b).start;
-    return aStart - bStart;
-  });
+  const sorted = [...events].sort(
+    (a, b) =>
+      parseEventDateTime(a).start -
+      parseEventDateTime(b).start
+  );
 
-  let liveEvent = null;
-  let nextEvent = null;
+  const live = sorted.find(e => getEventStatus(e) === "live") || null;
 
-  for (const event of sorted) {
-    const status = getEventStatus(event);
+  const giveawayLive = sorted.find(
+    e => e.is_giveaway === true && getEventStatus(e) === "live"
+  ) || null;
 
-    if (status === "live") {
-      liveEvent = event;
-      break;
-    }
+  const featuredPinned = sorted.find(
+    e => e.is_featured === true && getEventStatus(e) !== "ended"
+  ) || null;
 
-    if (!nextEvent && status === "upcoming") {
-      nextEvent = event;
-    }
-  }
+  const giveawayUpcoming = sorted.find(
+    e => e.is_giveaway === true && getEventStatus(e) === "upcoming"
+  ) || null;
+
+  const upcoming = sorted.find(
+    e => getEventStatus(e) === "upcoming"
+  ) || null;
+
+  const featured =
+    giveawayLive ||     // highest priority (live giveaway overrides everything)
+    live ||             // live event fallback
+    featuredPinned ||   // admin pinned featured
+    giveawayUpcoming || // upcoming giveaway
+    upcoming ||         // fallback
+    null;
 
   return {
-    featured: liveEvent || nextEvent || null,
-    live: liveEvent,
-    next: nextEvent,
-    all: sorted
+    all: sorted,
+    live,
+    giveawayLive,
+    featured,
+    upcoming
   };
 }
 
@@ -466,9 +473,18 @@ async function renderFeaturedEvent() {
   }
 
   if (badge) {
-    badge.textContent = brain.live
-      ? "🔴 LIVE NOW"
-      : "⭐ Featured Event";
+    if (brain.live) {
+  badge.textContent = "🔴 LIVE NOW";
+}
+else if (event.is_featured) {
+  badge.textContent = "⭐ FEATURED";
+}
+else if (event.is_giveaway) {
+  badge.textContent = "🎁 GIVEAWAY";
+}
+else {
+  badge.textContent = "📅 UPCOMING";
+}
   }
 }
 
