@@ -271,6 +271,75 @@ function getEventCTA(event) {
   };
 }
 
+function getEventActions(event) {
+
+  if (!event) {
+    return {};
+  }
+
+  const status = getEventStatus(event);
+
+  /*
+   * LIVE EVENT
+   * Contact only
+   */
+  if (status === "live") {
+    return {
+      primary: {
+        text: "Contact Us",
+        page: event.contact_page || "contact"
+      }
+    };
+  }
+
+  /*
+   * GIVEAWAY EVENTS
+   * Giveaway + Tickets/Contact
+   */
+  if (event.is_giveaway === true) {
+
+    const actions = {
+      primary: {
+        text: "Enter Giveaway",
+        page: event.giveaway_page || "ticket-giveaway"
+      }
+    };
+
+    if (event.button_url && event.button_url !== "#") {
+      actions.secondary = {
+        text: "Buy Tickets",
+        url: event.button_url
+      };
+    } else {
+      actions.secondary = {
+        text: "Contact Us",
+        page: event.contact_page || "contact"
+      };
+    }
+
+    return actions;
+  }
+
+  /*
+   * NORMAL EVENTS
+   */
+  if (event.button_url && event.button_url !== "#") {
+    return {
+      primary: {
+        text: "Buy Tickets",
+        url: event.button_url
+      }
+    };
+  }
+
+  return {
+    primary: {
+      text: "Contact Us",
+      page: event.contact_page || "contact"
+    }
+  };
+}
+
 function getEventBrain(events) {
   const now = new Date();
 
@@ -463,28 +532,57 @@ async function renderEventsGrid() {
 
           ${(() => {
 
-        const cta = getEventCTA(event);
+  const actions = getEventActions(event);
 
-        if (cta.page) {
-          return `
-      <a href="#"
-         class="btn btn-outline-sm"
-         data-page="${cta.page}">
-         ${cta.text}
-      </a>
-    `;
-        }
+  let html = `<div class="event-cta-group">`;
 
-        return `
-    <a href="${cta.url}"
-       class="btn btn-outline-sm"
-       target="_blank"
-       rel="noopener">
-       ${cta.text}
-    </a>
-  `;
+  // PRIMARY CTA
+  if (actions.primary) {
+    if (actions.primary.page) {
+      html += `
+        <a href="#"
+           class="btn btn-primary btn-sm"
+           data-page="${actions.primary.page}">
+           ${actions.primary.text}
+        </a>
+      `;
+    } else {
+      html += `
+        <a href="${actions.primary.url}"
+           class="btn btn-primary btn-sm"
+           target="_blank"
+           rel="noopener">
+           ${actions.primary.text}
+        </a>
+      `;
+    }
+  }
 
-      })()}
+  // SECONDARY CTA (only for giveaway)
+  if (actions.secondary) {
+    if (actions.secondary.page) {
+      html += `
+        <a href="#"
+           class="btn btn-outline-sm"
+           data-page="${actions.secondary.page}">
+           ${actions.secondary.text}
+        </a>
+      `;
+    } else {
+      html += `
+        <a href="${actions.secondary.url}"
+           class="btn btn-outline-sm"
+           target="_blank"
+           rel="noopener">
+           ${actions.secondary.text}
+        </a>
+      `;
+    }
+  }
+
+  return html + `</div>`;
+
+})()}
         </div>
       </div>
     `;
@@ -523,28 +621,31 @@ async function renderHomeEvents() {
 
         ${(() => {
 
-        const cta = getEventCTA(event);
+  const actions = getEventActions(event);
+  const primary = actions.primary;
 
-        if (cta.page) {
-          return `
+  if (!primary) return "";
+
+  if (primary.page) {
+    return `
       <a href="#"
-         class="btn btn-outline-sm"
-         data-page="${cta.page}">
-         ${cta.text}
+         class="btn btn-outline-sm btn-home-primary"
+         data-page="${primary.page}">
+         ${primary.text}
       </a>
     `;
-        }
+  }
 
-        return `
-    <a href="${cta.url}"
-       class="btn btn-outline-sm"
+  return `
+    <a href="${primary.url}"
+       class="btn btn-outline-sm btn-home-primary"
        target="_blank"
        rel="noopener">
-       ${cta.text}
+       ${primary.text}
     </a>
   `;
 
-      })()}
+})()}
       </div>
     `;
   });
