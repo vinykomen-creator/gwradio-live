@@ -290,7 +290,14 @@
             </div>
             <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
               <input type="email" id="newsletterEmailMain" name="email" placeholder="Your email address" required />
-              <button type="submit" class="btn btn-white">Subscribe</button>
+              <button type="submit" class="btn btn-white">
+                <span class="btn-text">Subscribe</span>
+                <span class="btn-spinner" style="display: none;">
+                  <svg class="spinner" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                  </svg>
+                </span>
+              </button>
             </form>
           </div>
         </div>
@@ -346,7 +353,6 @@
                   <label>First Name</label>
                   <input type="text" id="signupFirstName" placeholder="Your first name" required />
                 </div>
-
                 <div class="form-group">
                   <label>Last Name</label>
                   <input type="text" id="signupLastName" placeholder="Your last name" required />
@@ -381,7 +387,6 @@
 
               <div class="form-check">
                 <input type="checkbox" id="terms" required />
-
                 <label for="terms">
                   I agree to the
                   <a href="https://globalworshipradio.com/terms-of-use/">Terms & Conditions</a>
@@ -391,7 +396,12 @@
               </div>
 
               <button type="submit" class="btn btn-primary btn-full">
-                Create Account
+                <span class="btn-text">Create Account</span>
+                <span class="btn-spinner" style="display: none;">
+                  <svg class="spinner" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                  </svg>
+                </span>
               </button>
             </form>
           </div>
@@ -936,7 +946,6 @@
                   <label>First Name</label>
                   <input type="text" id="contactFirstName" placeholder="Your first name" required />
                 </div>
-
                 <div class="form-group">
                   <label>Last Name</label>
                   <input type="text" id="contactLastName" placeholder="Your last name" required />
@@ -950,7 +959,6 @@
 
               <div class="form-group">
                 <label>Subject</label>
-
                 <select id="contactSubject">
                   <option>General Inquiry</option>
                   <option>Training Programs</option>
@@ -963,14 +971,17 @@
 
               <div class="form-group">
                 <label>Message</label>
-
                 <textarea id="contactMessage" rows="6" placeholder="How can we help you?" required></textarea>
               </div>
 
               <button type="submit" class="btn btn-primary btn-full">
-                Send Message
+                <span class="btn-text">Send Message</span>
+                <span class="btn-spinner" style="display: none;">
+                  <svg class="spinner" viewBox="0 0 50 50">
+                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                  </svg>
+                </span>
               </button>
-
             </form>
           </div>
         </div>
@@ -1108,9 +1119,15 @@
         <div class="footer-newsletter">
           <h4>Newsletter</h4>
           <p>Stay updated with our latest news, programs, and events.</p>
-          <form class="footer-nl-form" onsubmit="handleNewsletterSubmit(event)">
+          <form id="newsletterForm" class="footer-nl-form">
             <input type="email" id="newsletterEmailFooter" name="email" placeholder="Your email address" required />
-            <button type="submit" class="btn btn-primary">Subscribe</button>
+            <button type="submit" class="btn btn-primary">
+              <span class="btn-text">Subscribe</span>
+              <span class="btn-spinner" style="display: none;">
+                <svg class="spinner" viewBox="0 0 50 50">
+                  <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                </svg>
+            </button>
           </form>
         </div>
       </div>

@@ -47,7 +47,7 @@ function initRadioPlayer() {
   });
 
   GWR.audio.addEventListener("error", () => {
-    showToast("⚠️ Stream connection issue. Please retry.", "");
+    showToast("⚠️ Stream connection issue. Please retry.", "error");
     setMiniPlayerBuffering(false);
     GWR.isPlaying = false;
     syncAllPlayerUI();
@@ -62,7 +62,7 @@ function playStream() {
   if (!GWR.isPlaying) {
     GWR.audio.play().catch(err => {
       console.warn("Playback blocked by browser:", err);
-      showToast("Tap Play to start streaming", "");
+      showToast("Tap Play to start streaming", "info");
     });
   }
 }
@@ -689,6 +689,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const contactForm = document.getElementById('contactForm');
   if (contactForm) contactForm.addEventListener('submit', (e) => handleFormSubmit(e, 'contact'));
+
+  const newsletterForm = document.getElementById('newsletterForm');
+  if (newsletterForm) newsletterForm.addEventListener('submit', handleNewsletterSubmit);
 });
 
 function initNavigation() {
@@ -1104,10 +1107,34 @@ function toggleFaq(btn) {
   }
 }
 
-function handleNewsletterSubmit(event) {
+/* ========== TOAST NOTIFICATION FUNCTION (UPDATED) ========== */
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Trigger animation
+  setTimeout(() => {
+    toast.style.animation = 'slideIn 0.3s ease forwards';
+  }, 10);
+
+  // Auto-remove after 4 seconds
+  setTimeout(() => {
+    toast.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+/* ========== NEWSLETTER SUBMIT HANDLER (UPDATED WITH SPINNER) ========== */
+async function handleNewsletterSubmit(event) {
   event.preventDefault();
 
-  const emailInput = event.target.querySelector('input[type="email"]');
+  const form = event.target;
+  const emailInput = form.querySelector('input[type="email"]');
+  const button = form.querySelector('button[type="submit"]');
+  const btnText = button.querySelector('.btn-text');
+  const btnSpinner = button.querySelector('.btn-spinner');
   const email = emailInput ? emailInput.value.trim() : '';
 
   if (!email) {
@@ -1115,43 +1142,59 @@ function handleNewsletterSubmit(event) {
     return;
   }
 
-  fetch('https://gwradio-live.onrender.com/api/subscribe', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      email: email,
-      source: 'footer'
-    })
-  })
-    .then(async (res) => {
-      const data = await res.json();
+  // Show loading state
+  button.disabled = true;
+  btnText.style.display = 'none';
+  btnSpinner.style.display = 'inline-flex';
 
-      if (!res.ok) {
-        throw new Error(data.message || 'Subscription failed');
-      }
-
-      return data;
-    })
-    .then((data) => {
-      showToast(data.message || 'Successfully subscribed!', 'success');
-      event.target.reset();
-    })
-    .catch((err) => {
-      console.error(err);
-      showToast(err.message || 'Server connection error', 'error');
+  try {
+    const response = await fetch('https://gwradio-live.onrender.com/api/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        source: 'footer'
+      })
     });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Subscription failed');
+    }
+
+    showToast(data.message || 'Successfully subscribed!', 'success');
+    form.reset();
+  } catch (error) {
+    console.error('Newsletter Error:', error);
+    showToast(error.message || 'Server connection error', 'error');
+  } finally {
+    // Hide loading state
+    button.disabled = false;
+    btnText.style.display = 'inline';
+    btnSpinner.style.display = 'none';
+  }
 }
 
+/* ========== FORM SUBMIT HANDLER (UPDATED WITH SPINNER) ========== */
 async function handleFormSubmit(event, type) {
   event.preventDefault();
 
+  const button = event.target.querySelector('button[type="submit"]');
+  const btnText = button.querySelector('.btn-text');
+  const btnSpinner = button.querySelector('.btn-spinner');
+  const form = event.target;
+
+  // Show loading state
+  button.disabled = true;
+  btnText.style.display = 'none';
+  btnSpinner.style.display = 'inline-flex';
+
   try {
-
     if (type === 'signup') {
-
       const payload = {
         first_name: document.getElementById('signupFirstName').value.trim(),
         last_name: document.getElementById('signupLastName').value.trim(),
@@ -1173,15 +1216,14 @@ async function handleFormSubmit(event, type) {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Account created successfully!');
-        document.getElementById('signupForm').reset();
+        showToast(data.message || 'Account created successfully!', 'success');
+        form.reset();
       } else {
-        alert(data.message || 'Signup failed');
+        showToast(data.message || 'Signup failed', 'error');
       }
     }
 
     if (type === 'contact') {
-
       const payload = {
         first_name: document.getElementById('contactFirstName').value.trim(),
         last_name: document.getElementById('contactLastName').value.trim(),
@@ -1201,16 +1243,20 @@ async function handleFormSubmit(event, type) {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Message sent successfully!');
-        document.getElementById('contactForm').reset();
+        showToast(data.message || 'Message sent successfully!', 'success');
+        form.reset();
       } else {
-        alert(data.message || 'Failed to send message');
+        showToast(data.message || 'Failed to send message', 'error');
       }
     }
-
   } catch (error) {
     console.error('Form Error:', error);
-    alert('Unable to connect to server.');
+    showToast('Unable to connect to server', 'error');
+  } finally {
+    // Hide loading state
+    button.disabled = false;
+    btnText.style.display = 'inline';
+    btnSpinner.style.display = 'none';
   }
 }
 
@@ -1234,16 +1280,6 @@ function filterByType(type, btn) {
     const cardType = card.getAttribute('data-type');
     card.classList.toggle('hidden', type !== 'all' && cardType !== type);
   });
-}
-
-function showToast(message, type = '') {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.className = `toast ${type} show`;
-
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 3500);
 }
 
 document.addEventListener('keydown', (e) => {
