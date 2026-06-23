@@ -1107,8 +1107,16 @@ function toggleFaq(btn) {
   }
 }
 
-/* ========== TOAST NOTIFICATION FUNCTION (UPDATED) ========== */
+/* ========== TOAST NOTIFICATION FUNCTION (UPDATED - NO DUPLICATES) ========== */
 function showToast(message, type = 'info') {
+  // Remove any existing toasts first
+  const existingToasts = document.querySelectorAll('.toast');
+  existingToasts.forEach(toast => {
+    toast.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => toast.remove(), 300);
+  });
+
+  // Create new toast
   const toast = document.createElement('div');
   toast.className = `toast toast-${type}`;
   toast.textContent = message;
