@@ -792,18 +792,182 @@
 
     <section class="page" id="page-ticket-giveaway">
 
-      <div class="container">
+      <!-- Hero -->
+      <div class="page-hero page-hero-sm" style="background: linear-gradient(135deg, #f2503a 0%, #f2a33a 100%);">
 
-        <h2>Ticket Giveaway</h2>
+        <div class="container">
+          <span class="section-label" style="color: rgba(255,255,255,0.7)">
+            Concert Giveaways
+          </span>
 
-        <p>
-          🚧 This page is currently under development.
-          Visit <a href="https://globalworshipradio.com" target="_blank"
-            rel="noopener noreferrer">globalworshipradio.com</a> and enter today's emoji code for your chance to win
-          tickets.
-          Giveaway entries will open soon!
+          <h1>Win Tickets With Global Worship Radio</h1>
 
-        </p>
+          <p>
+            Enter our featured giveaways for a chance to experience
+            incredible worship events and concerts. Listen live for
+            emoji clues and boost your chances of winning.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Main Content -->
+      <div class="container page-content-grid" style="padding-top: 60px;">
+
+        <!-- LEFT COLUMN -->
+        <div class="contact-form-col">
+
+          <div class="form-card">
+
+            <h2>Enter Giveaway</h2>
+
+            <form id="giveawayForm">
+
+              <!-- Hidden event -->
+              <input type="hidden" id="selectedGiveawayEvent" name="selectedGiveawayEvent">
+
+              <!-- Name -->
+              <div class="form-row">
+
+                <div class="form-group">
+                  <label>First Name</label>
+
+                  <input type="text" name="firstName" placeholder="Your first name" required>
+                </div>
+
+                <div class="form-group">
+                  <label>Last Name</label>
+
+                  <input type="text" name="lastName" placeholder="Your last name" required>
+                </div>
+
+              </div>
+
+              <!-- Email -->
+              <div class="form-group">
+                <label>Email Address</label>
+
+                <input type="email" name="email" placeholder="you@email.com" required>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-group">
+                <label>Phone Number</label>
+
+                <input type="tel" id="phoneInput" name="phone" placeholder="+1 234 567 890" required>
+              </div>
+
+              <!-- Listener -->
+              <div class="form-group">
+                <label>
+                  Have you listened to Global Worship Radio before?
+                </label>
+
+                <select name="listenerStatus" required>
+                  <option value="">Select…</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <!-- Source -->
+              <div class="form-group">
+                <label>How did you hear about us?</label>
+
+                <select name="source" required>
+                  <option value="">Select…</option>
+                  <option>Instagram</option>
+                  <option>Facebook</option>
+                  <option>Friend</option>
+                  <option>Website</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <!-- Emoji -->
+              <div class="form-group">
+                <label>
+                  Did you participate in the Emoji Challenge?
+                </label>
+
+                <select id="emojiParticipation" name="emojiParticipation" required>
+
+                  <option value="">Select</option>
+                  <option>No</option>
+                  <option>Yes</option>
+
+                </select>
+              </div>
+
+              <!-- Bonus -->
+              <div class="form-group hidden" id="bonusCodeField">
+
+                <label>
+                  Enter Your Emoji Challenge Code
+                </label>
+
+                <input type="text" name="bonusCode" placeholder="GWR-XXXXX">
+              </div>
+
+              <!-- Submit -->
+              <button type="submit" class="btn btn-primary btn-full submit-btn">
+
+                <span id="btnText">
+                  Submit Entry
+                </span>
+
+                <div class="spinner" id="spinner">
+                </div>
+
+              </button>
+
+              <p id="responseMessage"></p>
+
+            </form>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="contact-info-col">
+
+          <!-- Current Giveaway -->
+          <div class="contact-info-box">
+
+            <h3>Current Giveaway</h3>
+
+            <div id="giveawayPromoCard">
+
+              <p>
+                Loading featured giveaway...
+              </p>
+
+            </div>
+
+          </div>
+
+          <!-- Emoji Challenge -->
+          <div class="contact-info-box">
+
+            <h3>Emoji Challenge</h3>
+
+            <p>
+              Listen live for emoji clues announced on-air.
+            </p>
+
+            <p>
+              Enter the secret code for bonus entries and increase
+              your chances of winning.
+            </p>
+
+            <p>
+              One valid emoji code equals one bonus chance.
+            </p>
+
+          </div>
+
+        </div>
 
       </div>
 
@@ -814,7 +978,8 @@
         <div class="container">
           <span class="section-label" style="color: rgba(255,255,255,0.7)">Knowledge Hub</span>
           <h1>Resources & Learning</h1>
-          <p>Free guides, articles, audio resources, and training materials for the Global Worship Radio community.</p>
+          <p>Free guides, articles, audio resources, and training materials for the Global Worship Radio community.
+          </p>
         </div>
       </div>
       <div class="container" style="padding-top: 60px;">
@@ -841,7 +1006,8 @@
             <div class="resource-content">
               <span class="resource-type">Guide</span>
               <h4>Street Team Training & Engagement Handbook</h4>
-              <p>Learn how to represent your community with confidence, clarity, and purpose. This guide equips you with
+              <p>Learn how to represent your community with confidence, clarity, and purpose. This guide equips you
+                with
                 everything you need to serve effectively as a Street Team member — from communication style to program
                 understanding and engagement standards.</p>
               <a href="assets\PDF\gwr-street-team-training-handbook.pdf" class="btn btn-outline-sm">Download PDF</a>
@@ -852,10 +1018,12 @@
             <div class="resource-content">
               <span class="resource-type">Guide</span>
               <h4>Street Team Campaign & Outreach Playbook</h4>
-              <p>A practical action guide for executing weekly campaigns across Global Worship Radio programs. Discover
+              <p>A practical action guide for executing weekly campaigns across Global Worship Radio programs.
+                Discover
                 how to promote prayer moments, events, giveaways, and content that grows engagement and expands global
                 reach.</p>
-              <a href="assets\PDF\gwr-playbook-street-team-outreach.pdf.pdf" class="btn btn-outline-sm">Download PDF</a>
+              <a href="assets\PDF\gwr-playbook-street-team-outreach.pdf.pdf" class="btn btn-outline-sm">Download
+                PDF</a>
             </div>
           </div>
           <div class="resource-card fade-in" data-type="article">
@@ -873,7 +1041,8 @@
             <div class="resource-content">
               <span class="resource-type">Article</span>
               <h4>Made For More – 21 Day Devotional</h4>
-              <p>Start your year with clarity and faith. Join our daily devotional series crafted by Jacqui, our on-air
+              <p>Start your year with clarity and faith. Join our daily devotional series crafted by Jacqui, our
+                on-air
                 host from South Africa, and discover how God is calling you to live beyond limits.</p>
               <a href="https://globalworshipradio.com/category/made-for-more/" class="btn btn-outline-sm">Read
                 Article</a>
@@ -895,7 +1064,8 @@
             <div class="resource-content">
               <span class="resource-type">Audio</span>
               <h4>You’re Not Alone</h4>
-              <p>A comforting audio reminder that God is always near, even in your hardest and quietest moments. Take a
+              <p>A comforting audio reminder that God is always near, even in your hardest and quietest moments. Take
+                a
                 moment to be encouraged and renewed.</p>
               <a href="https://globalworshipradio.com/category/podcast/not-alone/" class="btn btn-outline-sm">Listen
                 Now</a>

@@ -488,6 +488,86 @@ else {
   }
 }
 
+function renderGiveawayPromo() {
+
+  const promo = document.getElementById("giveawayPromoCard");
+  const hiddenEvent = document.getElementById("selectedGiveawayEvent");
+
+  if (!promo) return;
+
+  const brain = getEventBrain(EVENTS_CACHE || []);
+
+  const event = brain.featured;
+
+  if (!event) {
+
+    promo.innerHTML = `
+      <p>No active giveaways at the moment.</p>
+    `;
+
+    if (hiddenEvent) {
+      hiddenEvent.value = "";
+    }
+
+    return;
+  }
+
+  promo.innerHTML = `
+  <div class="event-card giveaway-promo-card">
+
+    <div class="event-card-date">
+      ${event.date}
+    </div>
+
+    <div class="event-card-body">
+
+      <span class="event-tag">
+        ${event.tag || "Giveaway"}
+      </span>
+
+      <h4>
+        ${event.title}
+      </h4>
+
+      <p>
+        ${event.description}
+      </p>
+
+      <div class="event-card-meta">
+
+        <span>
+          🕒 ${event.start_time} – ${event.end_time}
+        </span>
+
+        <span>
+          ${event.location}
+        </span>
+
+      </div>
+
+      ${
+        event.button_url
+          ? `
+            <a href="${event.button_url}"
+               class="btn btn-outline-sm"
+               target="_blank"
+               rel="noopener">
+               Buy Tickets
+            </a>
+          `
+          : ""
+      }
+
+    </div>
+
+  </div>
+`;
+
+  if (hiddenEvent) {
+    hiddenEvent.value = event.title;
+  }
+}
+
 async function renderEventsGrid() {
   const container = document.getElementById("eventsGrid");
 
@@ -681,6 +761,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   await renderEventsGrid();
   await renderHomeEvents();
   await renderFeaturedEvent();
+
+  renderGiveawayPromo();
 
   checkInitialPage();
 
