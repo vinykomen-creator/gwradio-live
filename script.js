@@ -755,6 +755,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   initCountdown();
   initListenLive();
 
+  initGiveawayForm();
+
 
   await fetchEvents(true);
 
@@ -774,6 +776,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const newsletterForm = document.getElementById('newsletterForm');
   if (newsletterForm) newsletterForm.addEventListener('submit', handleNewsletterSubmit);
+
+ function initGiveawayForm() {
+  const form = document.getElementById("giveawayForm");
+
+  if (!form) return;
+
+  form.addEventListener("submit", handleGiveawaySubmit);
+
+  console.log("✅ Giveaway form initialized");
+}  
 });
 
 function initNavigation() {
@@ -1266,6 +1278,98 @@ async function handleNewsletterSubmit(event) {
     button.disabled = false;
     btnText.style.display = 'inline';
     btnSpinner.style.display = 'none';
+  }
+}
+
+async function handleGiveawaySubmit(e) {
+  e.preventDefault();
+
+  console.log("🎟 Giveaway form submitted");
+
+  const form = e.target;
+
+  const button = form.querySelector("button[type='submit']");
+  const btnText = button.querySelector(".btn-text");
+  const spinner = button.querySelector(".btn-spinner");
+
+  button.disabled = true;
+
+  btnText.style.display = "none";
+  spinner.style.display = "inline-flex";
+
+ try {
+
+  const formData = new FormData(form);
+
+  const selectedEvent =
+    formData.get("selectedGiveawayEvent");
+
+  const emojiParticipation =
+    formData.get("emojiParticipation");
+
+  const bonusCode =
+    formData.get("bonusCode");
+
+  console.log({
+    firstName: formData.get("firstName"),
+    lastName: formData.get("lastName"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    selectedEvent,
+    listenerStatus: formData.get("listenerStatus"),
+    source: formData.get("source"),
+    emojiParticipation,
+    bonusCode
+  });
+
+  const payload = {
+    first_name: formData.get("firstName"),
+    last_name: formData.get("lastName"),
+    email: formData.get("email"),
+    phone: formData.get("phone"),
+    selected_event: selectedEvent,
+    listener_status: formData.get("listenerStatus"),
+    source: formData.get("source"),
+    emoji_participation: emojiParticipation === "Yes",
+    emoji_code: bonusCode || null,
+    bonus_entries: bonusCode ? 1 : 0
+  };
+
+  console.log("Payload:", payload);
+
+  const { data, error } = await supabaseClient
+    .from("giveaway_entries")
+    .insert([payload])
+    .select();
+
+  console.log("Inserted:", data);
+
+  if (error) {
+    throw error;
+  }
+
+  console.log("✅ Supabase insert successful", data);
+
+  alert("You're entered! 🎉");
+
+  form.reset();
+
+  document.getElementById("selectedGiveawayEvent").value =
+    selectedEvent;
+
+} catch (err) {
+
+  console.error("❌ Supabase Error:", err);
+
+  alert(err.message);
+
+  } finally {
+
+    button.disabled = false;
+
+    btnText.style.display = "";
+    spinner.style.display = "none";
+
   }
 }
 
