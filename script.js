@@ -1311,16 +1311,47 @@ async function handleGiveawaySubmit(e) {
     formData.get("bonusCode");
 
   console.log({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    selectedEvent,
-    listenerStatus: formData.get("listenerStatus"),
-    source: formData.get("source"),
-    emojiParticipation,
-    bonusCode
-  });
+  firstName: formData.get("firstName"),
+  lastName: formData.get("lastName"),
+  email: formData.get("email"),
+  phone: formData.get("phone"),
+  selectedEvent,
+  listenerStatus: formData.get("listenerStatus"),
+  source: formData.get("source"),
+  emojiParticipation,
+  bonusCode
+});
+
+// Validate emoji code if listener participated
+
+if (
+  emojiParticipation === "Yes" &&
+  bonusCode
+) {
+
+  const { data: codeRecord, error: codeError } =
+  await supabaseClient
+    .from("emoji_codes")
+    .select("*")
+    .eq("code", bonusCode)
+    .eq("active", true)
+    .maybeSingle();
+
+  console.log("Code lookup:", codeRecord);
+
+  if (!codeRecord) {
+
+  alert("Invalid Emoji Challenge Code");
+
+  button.disabled = false;
+  btnText.style.display = "";
+  spinner.style.display = "none";
+
+  return;
+
+}
+
+}
 
   const payload = {
     first_name: formData.get("firstName"),
@@ -1350,7 +1381,10 @@ async function handleGiveawaySubmit(e) {
 
   console.log("✅ Supabase insert successful", data);
 
-  alert("You're entered! 🎉");
+  showToast(
+  "🎟 Entry submitted successfully!",
+  "success"
+);
 
   form.reset();
 
@@ -1361,7 +1395,10 @@ async function handleGiveawaySubmit(e) {
 
   console.error("❌ Supabase Error:", err);
 
-  alert(err.message);
+  showToast(
+  err.message || "Something went wrong.",
+  "error"
+);
 
   } finally {
 
