@@ -12,6 +12,7 @@
   --bg: #faf9f7;
   --bg-alt: #f5f3ef;
   --white: #ffffff;
+  --surface: var(--white);
   --border: #e8e4de;
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
   --shadow-md: 0 6px 24px rgba(0,0,0,0.10);
@@ -32,6 +33,15 @@ body {
   background: var(--bg);
   line-height: 1.65;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Light text on dark backgrounds renders noticeably bolder/blurrier in
+     WebKit & Chromium without this — most visible in dark mode. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3, h4 {
@@ -49,7 +59,7 @@ select, input, textarea {
   padding: 12px 16px;
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
-  background: var(--white);
+  background: var(--surface);
   color: var(--text);
   font-size: 0.95rem;
   outline: none;
@@ -104,7 +114,7 @@ textarea { resize: vertical; }
 }
 
 .btn-white {
-  background: var(--white);
+  background: var(--surface);
   color: var(--primary);
   font-weight: 700;
 }
@@ -119,7 +129,7 @@ textarea { resize: vertical; }
   border: 2px solid rgba(255,255,255,0.7);
 }
 .btn-outline:hover:not(:disabled) {
-  background: var(--white);
+  background: var(--surface);
   color: var(--primary);
   border-color: var(--white);
 }
@@ -539,7 +549,7 @@ section.section-donate { padding: 80px 0; }
   gap: 16px;
 }
 .feature-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 24px;
   box-shadow: var(--shadow-sm);
@@ -558,7 +568,7 @@ section.section-donate { padding: 80px 0; }
 }
 
 .program-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
@@ -635,7 +645,7 @@ section.section-donate { padding: 80px 0; }
   display: flex;
   align-items: center;
   gap: 20px;
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 20px 24px;
   box-shadow: var(--shadow-sm);
@@ -662,32 +672,13 @@ section.section-donate { padding: 80px 0; }
 .event-info h4 { font-size: 1rem; margin-bottom: 4px; }
 .event-info p { font-size: 0.83rem; color: var(--text-light); }
 
-#giveawayPromoCard .event-card {
-  box-shadow: none;
-  border: none;
-  background: transparent;
-  padding: 0;
-}
-
-#giveawayPromoCard .event-card:hover {
-  transform: none;
-}
-
-#giveawayPromoCard .event-card-date {
-  margin-bottom: 1rem;
-}
-
-#giveawayPromoCard .event-card-body {
-  padding: 0;
-}
-
 .testimonials-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
 }
 .testimonial-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   padding: 36px 28px 28px;
   box-shadow: var(--shadow-sm);
@@ -791,7 +782,7 @@ section.section-donate { padding: 80px 0; }
 
 /* ========== FORM CARD STYLES (UPDATED WITH MOBILE RESPONSIVE) ========== */
 .form-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   padding: 40px 36px;
   box-shadow: var(--shadow-md);
@@ -892,7 +883,7 @@ section.section-donate { padding: 80px 0; }
 }
 
 .benefits-box {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   padding: 32px;
   box-shadow: var(--shadow-sm);
@@ -919,7 +910,7 @@ section.section-donate { padding: 80px 0; }
 .highlight-stat span { font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.05em; }
 
 .faq-box {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   padding: 32px;
   box-shadow: var(--shadow-sm);
@@ -960,7 +951,7 @@ section.section-donate { padding: 80px 0; }
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--white);
+  background: var(--surface);
   font-size: 0.9rem;
 }
 .schedule-table th {
@@ -999,7 +990,7 @@ section.section-donate { padding: 80px 0; }
   gap: 24px;
 }
 .instructor-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
   text-align: center;
@@ -1055,7 +1046,7 @@ section.section-donate { padding: 80px 0; }
   margin-top: 8px;
 }
 .event-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
@@ -1078,6 +1069,7 @@ section.section-donate { padding: 80px 0; }
 .event-card-body h4 { font-size: 1rem; margin-bottom: 8px; }
 .event-card-body p { font-size: 0.87rem; color: var(--text-light); flex: 1; margin-bottom: 14px; }
 .event-card-meta { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--text-light); margin-bottom: 16px; }
+.event-cta-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; }
 
 .resources-filter { margin-bottom: 40px; display: flex; flex-direction: column; gap: 14px; }
 .filter-input {
@@ -1108,7 +1100,7 @@ section.section-donate { padding: 80px 0; }
   margin-bottom: 80px;
 }
 .resource-card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 24px;
   box-shadow: var(--shadow-sm);
@@ -1137,7 +1129,7 @@ section.section-donate { padding: 80px 0; }
 .resource-card.hidden { display: none; }
 
 .contact-info-box {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius-lg);
   padding: 32px;
   box-shadow: var(--shadow-sm);
@@ -1148,6 +1140,39 @@ section.section-donate { padding: 80px 0; }
 .contact-info-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
 .contact-info-list li { display: flex; gap: 14px; align-items: flex-start; }
 .contact-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+
+/* Plain wrapper (no card chrome) for content that already looks like a
+   card on its own — e.g. the giveaway promo, which reuses .event-card. */
+.sidebar-section { margin-bottom: 24px; }
+.sidebar-heading { font-size: 1.2rem; margin-bottom: 16px; }
+
+/* Advertisement space — image, video, or text, with an optional link */
+.ad-space { text-align: center; }
+.ad-space-label {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
+.ad-space-media {
+  display: block;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.ad-space-media img,
+.ad-space-media video {
+  width: 100%;
+  display: block;
+}
+.ad-space-text {
+  font-size: 0.87rem;
+  color: var(--text-light);
+  margin-bottom: 16px;
+}
 .contact-info-list strong { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 3px; }
 .contact-info-list p { font-size: 0.84rem; color: var(--text-light); margin: 0; }
 
@@ -1295,7 +1320,7 @@ section.section-donate { padding: 80px 0; }
     position: fixed;
     top: 70px;
     left: 0; right: 0;
-    background: var(--white);
+    background: var(--surface);
     flex-direction: column;
     padding: 20px;
     box-shadow: var(--shadow-lg);
@@ -1714,4 +1739,285 @@ body.mini-player-active {
   .mini-title      { font-size: 0.9rem; }
   .mini-subtitle   { font-size: 0.76rem; }
   .mini-play-btn   { width: 48px; height: 48px; }
+}
+/* ==========================================================================
+   ADDITIONS — site upgrade (Prayers page + fixes)
+   ========================================================================== */
+
+/* Generic hidden utility — the live site referenced this class (e.g. on
+   #bonusCodeField) but never actually defined it. */
+.hidden { display: none !important; }
+
+/* Small helper text under a form field (used on the Prayers form) */
+.field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+/* Prayers page — embedded external prayer page (Option A in prayers.js) */
+.prayer-embed-frame {
+  width: 100%;
+  min-height: 720px;
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  background: var(--surface);
+}
+
+@media (max-width: 768px) {
+  .prayer-embed-frame { min-height: 640px; }
+}
+
+/* ==========================================================================
+   PRAYER WALL (Prayers page)
+   ========================================================================== */
+
+.prayer-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.prayer-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-light);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.prayer-tab .material-symbols-outlined { font-size: 1.1em; }
+.prayer-tab:hover { border-color: var(--primary); color: var(--primary); }
+.prayer-tab.active { background: var(--primary); border-color: var(--primary); color: var(--white); }
+
+.prayer-stats-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.prayer-stat { text-align: center; }
+.prayer-stat-num { font-family: var(--font-head); font-size: 2rem; font-weight: 700; color: var(--primary); }
+.prayer-stat-label { font-size: 0.85rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.prayer-grid { align-items: start; }
+
+.cats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.cat {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.cat:hover { border-color: var(--secondary); }
+.cat.selected { background: var(--secondary); border-color: var(--secondary); color: var(--white); }
+
+.field-hint { display: block; margin-top: 6px; font-size: 0.8rem; color: var(--text-light); text-align: right; }
+
+.form-msg { margin-top: 12px; font-size: 0.9rem; color: var(--primary); min-height: 1.2em; }
+
+.search-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.search-row input,
+.search-row select {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+.search-row input { flex: 1; }
+
+.filter-cats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.filter-cat {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-light);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.filter-cat:hover { border-color: var(--primary); }
+.filter-cat.active { background: var(--primary); border-color: var(--primary); color: var(--white); }
+
+.prayer-list { display: flex; flex-direction: column; gap: 16px; }
+
+.prayer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.prayer-card.pinned { border-color: var(--secondary); box-shadow: var(--shadow-md); }
+
+.prayer-card-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.prayer-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem; flex-shrink: 0;
+}
+.prayer-card-meta { flex: 1; min-width: 0; }
+.prayer-card-name { font-weight: 600; color: var(--text); }
+.prayer-card-time { font-size: 0.8rem; color: var(--text-light); }
+.prayer-card-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.prayer-badge {
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--bg-alt);
+  color: var(--text-light);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+.prayer-badge-pinned { background: var(--secondary); color: var(--white); }
+.prayer-badge .material-symbols-outlined { font-size: 0.9em; }
+
+.prayer-card-text { color: var(--text); line-height: 1.6; margin-bottom: 14px; }
+
+.prayer-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.prayer-react-btn,
+.prayer-reply-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-light);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.prayer-react-btn .material-symbols-outlined,
+.prayer-reply-toggle .material-symbols-outlined { font-size: 1em; }
+.prayer-react-btn:hover { border-color: var(--primary); color: var(--primary); }
+.prayer-react-btn.reacted { background: var(--primary); border-color: var(--primary); color: var(--white); }
+
+.prayer-replies {
+  display: none;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.prayer-replies.open { display: block; }
+.prayer-reply { font-size: 0.88rem; color: var(--text); margin-bottom: 8px; }
+.prayer-reply-name { font-weight: 600; margin-right: 6px; color: var(--primary); }
+.prayer-reply-input-row { display: flex; gap: 8px; margin-top: 10px; }
+.prayer-reply-input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.prayer-reply-input-row button {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.prayer-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text-light);
+}
+.prayer-empty .material-symbols-outlined { font-size: 2rem; display: block; margin-bottom: 10px; color: var(--border); }
+
+@media (max-width: 768px) {
+  .prayer-tabs { justify-content: center; }
+  .search-row { flex-direction: column; }
+}
+
+/* ==========================================================================
+   DARK MODE
+   ------------------------------------------------------------------------
+   Everything on the site is already built on CSS variables, so dark mode is
+   a variable override, not a rewrite. --dark/--dark-mid (header, hero
+   gradients) are intentionally left alone — those stay the same brand navy
+   in both themes.
+   ========================================================================== */
+
+[data-theme="dark"] {
+  --text: #e9e7f2;
+  --text-light: #a7a4bf;
+  --bg: #131320;
+  --bg-alt: #1a1a2c;
+  --surface: #1e1e33;
+  --border: #32324a;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.35);
+  --shadow-md: 0 6px 24px rgba(0,0,0,0.45);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.55);
+}
+
+/* h1-h4 and .badge-intermediate are hard-coded to color: var(--dark)
+   (#1a1a2e) for the light theme's near-black heading color. --dark itself
+   stays the same brand navy in dark mode (it's also used for header/hero
+   backgrounds), so those rules need an explicit override here — otherwise
+   headings render at ~1.08:1 contrast against the dark background,
+   effectively invisible. */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] .logo-text {
+  color: var(--text);
+}
+[data-theme="dark"] .badge-intermediate {
+  background: rgba(233, 231, 242, 0.12);
+  color: var(--text);
+}
+
+[data-theme="dark"] img:not(.logo-image) {
+  filter: brightness(0.92);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
+.theme-toggle .material-symbols-outlined { font-size: 20px; }
+.theme-toggle .icon-dark { display: none; }
+[data-theme="dark"] .theme-toggle .icon-light { display: none; }
+[data-theme="dark"] .theme-toggle .icon-dark { display: inline; }
+
+@media (max-width: 900px) {
+  .theme-toggle { order: -1; }
 }

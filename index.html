@@ -4,7 +4,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="assets\Images\favicon-32x32.png" type="image/x-icon" />
+  <script>
+    // Runs before first paint to avoid a flash of the wrong theme.
+    (function () {
+      try {
+        var saved = localStorage.getItem('gwr-theme');
+        var wantsDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (wantsDark) document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* localStorage unavailable — default to light */ }
+    })();
+  </script>
+  <link rel="icon" href="assets/Images/favicon-32x32.png" type="image/x-icon" />
   <title>Global Worship Radio | Connected Through Prayer, Word & Worship</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,7 +23,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Roboto:wght@300;400;500;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
@@ -21,16 +31,16 @@
   <header class="site-header" id="site-header">
     <nav class="navbar container">
       <a href="#" class="logo" data-page="home">
-        <img src="assets\Images\logo.png" alt="Global Worship Radio Logo" class="logo-image" width="180" height="50" />
+        <img src="assets/Images/logo.png" alt="Global Worship Radio Logo" class="logo-image" width="180" height="50" />
       </a>
 
       <ul class="nav-links" id="nav-links">
         <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
-        <li><a href="#" class="nav-link" data-page="signup">Signup</a></li>
-        <li><a href="#" class="nav-link" data-page="training">Training</a></li>
-        <li><a href="#" class="nav-link" data-page="events">Events</a></li>
-        <li><a href="#" class="nav-link" data-page="resources">Resources</a></li>
-        <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
+        <li><a href="#prayers" class="nav-link" data-page="prayers">Prayers</a></li>
+        <li><a href="#events" class="nav-link" data-page="events">Events</a></li>
+        <li><a href="#giveaways" class="nav-link" data-page="giveaways">Giveaways</a></li>
+        <li><a href="#resources" class="nav-link" data-page="resources">Resources</a></li>
+        <li><a href="#contact" class="nav-link" data-page="contact">Contact</a></li>
       </ul>
 
       <div class="nav-actions">
@@ -44,6 +54,10 @@
         </a>
         <a href="https://give.tithe.ly/?formId=64e95d17-5d42-11ee-90fc-1260ab546d11" class="btn btn-donate"
           id="donateBtn" target="_blank" rel="noopener noreferrer">Donate</a>
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <span class="material-symbols-outlined icon-light">dark_mode</span>
+          <span class="material-symbols-outlined icon-dark">light_mode</span>
+        </button>
         <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -91,7 +105,7 @@
               </svg>
               Listen Live
             </a>
-            <a href="#" class="btn btn-outline btn-lg" data-page="events">Upcoming Events</a>
+            <a href="#events" class="btn btn-outline btn-lg" data-page="events">Upcoming Events</a>
           </div>
           <div class="hero-stats">
             <div class="stat"><strong>15K+</strong><span>Listeners Daily</span></div>
@@ -114,7 +128,6 @@
           </div>
         </div>
       </div>
-
       <section class="section-welcome">
         <div class="container two-col-grid">
           <div class="welcome-text fade-in">
@@ -129,7 +142,7 @@
               life. Through outreach, encouragement, and acts of service, we aim to build a welcoming community where
               people can encounter God’s presence and grow in their relationship with Him.
             </p>
-            <a href="#" class="btn btn-primary" data-page="signup">Join Our Community</a>
+            <a href="#prayers" class="btn btn-primary" data-page="prayers">Submit a Prayer Request</a>
           </div>
           <div class="welcome-cards fade-in">
             <div class="feature-card">
@@ -159,73 +172,6 @@
           </div>
         </div>
       </section>
-
-      <section class="section-training-preview section-alt">
-        <div class="container">
-          <div class="section-header">
-            <span class="section-label">Learn With Us</span>
-            <h2>Featured Training Programs</h2>
-            <p>Explore our core training pathways designed to equip you for outreach, leadership, media, prayer, and
-              impact in your local community. </p>
-          </div>
-          <div class="cards-grid">
-            <div class="program-card fade-in">
-              <div class="program-card-header" style="background: linear-gradient(135deg, #f2503a, #f2a33a);">
-                <span class="program-level">Beginner</span>
-                <h3>Street Team Foundations</h3>
-              </div>
-              <div class="program-card-body">
-                <p> Learn the vision, structure, and heart behind the Global Worship Street Team and how each role works
-                  together in outreach.</p>
-                <ul class="program-features">
-                  <li>✓ 4–6 week onboarding program</li>
-                  <li>✓ Vision & culture training</li>
-                  <li>✓ Practical outreach introduction</li>
-                </ul>
-                <a href="#" class="btn btn-outline-sm" data-page="training">Learn More</a>
-              </div>
-            </div>
-            <div class="program-card fade-in">
-              <div class="program-card-header" style="background: linear-gradient(135deg, #1a1a2e, #2d2d5e);">
-                <span class="program-level">Intermediate</span>
-                <h3>Street Team Leader Training
-                </h3>
-              </div>
-              <div class="program-card-body">
-                <p>Equip leaders to guide teams effectively, align vision, and ensure healthy communication and impact
-                  reporting.</p>
-                <ul class="program-features">
-                  <li>✓ Leadership development </li>
-                  <li>✓ Team communication systems</li>
-                  <li>✓ Impact measurement training</li>
-                </ul>
-                <a href="#" class="btn btn-outline-sm" data-page="training">Learn More</a>
-              </div>
-            </div>
-            <div class="program-card fade-in">
-              <div class="program-card-header" style="background: linear-gradient(135deg, #f2a33a, #e8793a);">
-                <span class="program-level">Advanced</span>
-                <h3>Event Coordinator Training
-                </h3>
-              </div>
-              <div class="program-card-body">
-                <p> Learn how to identify, organize, and manage outreach events from planning to execution on the
-                  ground.</p>
-                <ul class="program-features">
-                  <li>✓ Event logistics training</li>
-                  <li>✓ Scheduling & coordination skills</li>
-                  <li>✓ Field operations experience</li>
-                </ul>
-                <a href="#" class="btn btn-outline-sm" data-page="training">Learn More</a>
-              </div>
-            </div>
-          </div>
-          <div class="section-cta">
-            <a href="#" class="btn btn-primary" data-page="training">View All Programs</a>
-          </div>
-        </div>
-      </section>
-
       <section class="section-events-preview">
         <div class="container">
           <div class="section-header">
@@ -234,7 +180,7 @@
           </div>
           <div class="events-list" id="homeEventsList"></div>
           <div class="section-cta">
-            <a href="#" class="btn btn-primary" data-page="events">All Events</a>
+            <a href="#events" class="btn btn-primary" data-page="events">All Events</a>
           </div>
         </div>
       </section>
@@ -321,7 +267,7 @@
               </p>
             </div>
 
-            <a id="donateBtn" href="https://give.tithe.ly/?formId=64e95d17-5d42-11ee-90fc-1260ab546d11"
+            <a id="donateBtnHome" href="https://give.tithe.ly/?formId=64e95d17-5d42-11ee-90fc-1260ab546d11"
               class="btn btn-secondary btn-lg" target="_blank" rel="noopener noreferrer">
               Donate Now
             </a>
@@ -332,412 +278,110 @@
 
     </section>
 
-
-    <section class="page" id="page-signup">
-      <div class="page-hero page-hero-sm" style="background: linear-gradient(135deg, #f2503a 0%, #1a1a2e 100%);">
+    <section class="page" id="page-prayers">
+      <div class="page-hero page-hero-sm" style="background: linear-gradient(135deg, #1a1a2e 0%, #f2503a 100%);">
         <div class="container">
-          <span class="section-label" style="color: rgba(255,255,255,0.7)">Get Started Today</span>
-          <h1>Join the Global Worship Radio Community</h1>
-          <p>Step into a global movement of worship, prayer, and outreach that is reaching cities and transforming
-            lives.</p>
+          <span class="section-label" style="color: rgba(255,255,255,0.7)">Community · Faith · Prayer</span>
+          <h1>Stand in Faith Together</h1>
+          <p>Share your heart with the Global Worship Radio community. We believe God hears every prayer and
+            moves when we pray together — keep listening while you post.</p>
         </div>
       </div>
-      <div class="container page-content-grid">
-        <div class="signup-form-col">
-          <div class="form-card">
-            <h2>Create Your Account</h2>
 
-            <form id="signupForm">
-              <div class="form-row">
-                <div class="form-group">
-                  <label>First Name</label>
-                  <input type="text" id="signupFirstName" placeholder="Your first name" required />
+      <div class="container" style="padding-top: 40px;">
+
+        <div class="prayer-tabs">
+          <button class="prayer-tab active" data-prayer-tab="wall" onclick="switchPrayerTab('wall', this)">
+            <span class="material-symbols-outlined">volunteer_activism</span>Prayer Wall
+          </button>
+          <button class="prayer-tab" data-prayer-tab="submit" onclick="switchPrayerTab('submit', this)">
+            <span class="material-symbols-outlined">add_circle</span>Submit Prayer
+          </button>
+          <button class="prayer-tab" data-prayer-tab="mine" onclick="switchPrayerTab('mine', this)">
+            <span class="material-symbols-outlined">person</span>My Prayers
+          </button>
+        </div>
+
+        <div class="prayer-stats-row">
+          <div class="prayer-stat"><div class="prayer-stat-num" id="total-count">0</div><div class="prayer-stat-label">Prayers</div></div>
+          <div class="prayer-stat"><div class="prayer-stat-num" id="praying-count">0</div><div class="prayer-stat-label">Praying</div></div>
+          <div class="prayer-stat"><div class="prayer-stat-num" id="today-count">0</div><div class="prayer-stat-label">Today</div></div>
+        </div>
+
+        <div class="page-content-grid prayer-grid">
+
+          <!-- SUBMIT PANEL -->
+          <div class="signup-form-col" id="prayer-submit-panel">
+            <div class="form-card">
+              <h2><span class="material-symbols-outlined" style="vertical-align:-6px;">edit</span> New Prayer Request</h2>
+
+              <div class="form-group">
+                <label>Your name (optional)</label>
+                <input type="text" id="p-name" placeholder="Your name…" />
+              </div>
+
+              <div class="form-group">
+                <label>Your prayer request</label>
+                <textarea id="p-prayer" rows="5" maxlength="400" placeholder="Share what's on your heart…" oninput="updatePrayerCharCount()"></textarea>
+                <small class="field-hint"><span id="char-left">400</span> / 400</small>
+              </div>
+
+              <div class="form-group">
+                <label>Category</label>
+                <div class="cats" id="cat-select">
+                  <button type="button" class="cat selected" onclick="selectPrayerCat(this,'Healing')">Healing</button>
+                  <button type="button" class="cat" onclick="selectPrayerCat(this,'Family')">Family</button>
+                  <button type="button" class="cat" onclick="selectPrayerCat(this,'Finance')">Finance</button>
+                  <button type="button" class="cat" onclick="selectPrayerCat(this,'Guidance')">Guidance</button>
+                  <button type="button" class="cat" onclick="selectPrayerCat(this,'Praise')">Praise</button>
+                  <button type="button" class="cat" onclick="selectPrayerCat(this,'Salvation')">Salvation</button>
                 </div>
-                <div class="form-group">
-                  <label>Last Name</label>
-                  <input type="text" id="signupLastName" placeholder="Your last name" required />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="signupEmail" placeholder="your@email.com" required />
-              </div>
-
-              <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="signupPhone" placeholder="+1 234 567 8900" />
-              </div>
-
-              <div class="form-group">
-                <label>I'm interested in…</label>
-                <select id="signupInterest">
-                  <option>General Membership</option>
-                  <option>Training Programs</option>
-                  <option>Volunteering</option>
-                  <option>Partnerships</option>
-                  <option>Donations</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Tell us about yourself</label>
-                <textarea id="signupAbout" rows="4" placeholder="Brief intro or any questions you have..."></textarea>
               </div>
 
               <div class="form-check">
-                <input type="checkbox" id="terms" required />
-                <label for="terms">
-                  I agree to the
-                  <a href="https://globalworshipradio.com/terms-of-use/">Terms & Conditions</a>
-                  and
-                  <a href="https://globalworshipradio.com/privacy-policy/">Privacy Policy</a>
-                </label>
+                <input type="checkbox" id="anon-check" />
+                <label for="anon-check">Post anonymously</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" id="urgent-check" />
+                <label for="urgent-check">Mark as urgent</label>
               </div>
 
-              <button type="submit" class="btn btn-primary btn-full">
-                <span class="btn-text">Create Account</span>
-                <span class="btn-spinner" style="display: none;">
-                  <svg class="spinner" viewBox="0 0 50 50">
-                    <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                  </svg>
-                </span>
+              <button type="button" class="btn btn-primary btn-full" onclick="submitPrayer()">
+                <span class="material-symbols-outlined" style="vertical-align:-6px;font-size:1.1em;">send</span>
+                Submit Prayer Request
               </button>
-            </form>
+              <p class="form-msg" id="form-msg"></p>
+            </div>
           </div>
-        </div>
 
-        <div class="signup-info-col">
-          <div class="benefits-box">
-            <h3>Why Join Global Worship Radio?</h3>
-            <ul class="benefits-list">
-              <li><span class="benefit-icon"><span class="material-symbols-outlined">groups</span></span>
-                <div><strong>Global Mission Impact</strong>
-                  <p>Be part of a movement reaching cities with worship, prayer, and the message of Jesus through real
-                    on-the-ground outreach.</p>
-                </div>
-              </li>
-              <li><span class="benefit-icon"><span class="material-symbols-outlined">engineering</span></span>
-                <div><strong>Practical Hands-On Training</strong>
-                  <p>Learn by doing through structured training in leadership, outreach, media, prayer, and event
-                    coordination.</p>
-                </div>
-              </li>
-              <li><span class="benefit-icon"><span class="material-symbols-outlined">diversity_3</span></span>
-                <div><strong>Strong Community & Team Culture</strong>
-                  <p>Connect with passionate believers who support, grow, and serve together as one global family.</p>
-                </div>
-              </li>
-              <li><span class="benefit-icon"><span class="material-symbols-outlined">workspace_premium</span></span>
-                <div><strong>Real Skills for Real Impact</strong>
-                  <p>Develop communication, leadership, media, and people skills that you can apply both in ministry and
-                    everyday life.</p>
-                </div>
-              </li>
-              <li><span class="benefit-icon"><span class="material-symbols-outlined">emoji_objects</span></span>
-                <div><strong>Purpose-Driven Experience</strong>
-                  <p>Step into a meaningful journey where your gifts are used to encourage people, share hope, and
-                    transform atmospheres in your city.</p>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="community-highlight">
-            <h3>Community Highlights</h3>
-            <div class="highlight-stats">
-              <div class="highlight-stat"><strong>1,200+</strong><span>Active Members</span></div>
-              <div class="highlight-stat"><strong>50+</strong><span>Shows Weekly</span></div>
-              <div class="highlight-stat"><strong>45+</strong><span>Countries Reached</span></div>
+          <!-- WALL PANEL -->
+          <div class="signup-info-col" id="prayer-wall-panel">
+            <div class="search-row">
+              <input type="text" id="search-input" placeholder="Search prayers…" oninput="renderPrayerList()" />
+              <select id="sort-select" onchange="renderPrayerList()">
+                <option value="recent">Recent</option>
+                <option value="praying">Most praying</option>
+                <option value="pinned">Pinned first</option>
+              </select>
             </div>
-          </div>
-          <div class="faq-box">
-            <h3>Frequently Asked Questions</h3>
-            <div class="faq-list">
-              <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">What is the Global Worship Street Team?
-                  <span>+</span></button>
-                <div class="faq-answer">It is a community of trained volunteers who serve through outreach, prayer,
-                  media, and events to bring worship and the message of Jesus to cities locally and globally.</div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">Do I need experience to join?
-                  <span>+</span></button>
-                <div class="faq-answer">No experience is required. We provide structured online training to equip you
-                  for your specific role, whether in outreach, leadership, media, or prayer.</div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">How does the training work?
-                  <span>+</span></button>
-                <div class="faq-answer">After signing up, you will go through online training based on your selected
-                  role. Once completed, you can join or start a local team in your area.</div>
-              </div>
-              <div class="faq-item">
-                <button class="faq-question" onclick="toggleFaq(this)">What commitment is required?
-                  <span>+</span></button>
-                <div class="faq-answer">Commitment varies depending on your availability and role, but we encourage
-                  consistency, teamwork, and participation in outreach activities and team communication.</div>
-              </div>
+
+            <div class="filter-cats">
+              <button class="filter-cat active" onclick="filterPrayerCat('All',this)">All</button>
+              <button class="filter-cat" onclick="filterPrayerCat('Healing',this)">Healing</button>
+              <button class="filter-cat" onclick="filterPrayerCat('Family',this)">Family</button>
+              <button class="filter-cat" onclick="filterPrayerCat('Finance',this)">Finance</button>
+              <button class="filter-cat" onclick="filterPrayerCat('Guidance',this)">Guidance</button>
+              <button class="filter-cat" onclick="filterPrayerCat('Praise',this)">Praise</button>
+              <button class="filter-cat" onclick="filterPrayerCat('Salvation',this)">Salvation</button>
             </div>
+
+            <div class="prayer-list" id="prayer-list" role="list" aria-label="Community prayers"></div>
           </div>
+
         </div>
       </div>
     </section>
-
-    <section class="page" id="page-training">
-      <div class="page-hero page-hero-sm" style="background: linear-gradient(135deg, #1a1a2e 0%, #f2503a 100%);">
-        <div class="container">
-          <span class="section-label" style="color: rgba(255,255,255,0.7)">Professional Development</span>
-          <h1>Training Programs</h1>
-          <p>Industry-led courses designed to transform passionate individuals into broadcast professionals.</p>
-        </div>
-      </div>
-      <div class="container" style="padding-top: 60px;">
-        <div class="section-header">
-          <span class="section-label">Our Courses</span>
-          <h2>Find Your Program</h2>
-        </div>
-        <div class="cards-grid">
-          <div class="program-card fade-in">
-            <div class="program-card-header" style="background: linear-gradient(135deg, #f2503a, #f2a33a);">
-              <span class="program-level">Beginner</span>
-              <h3>Outreach Ambassador Training</h3>
-            </div>
-            <div class="program-card-body">
-              <p>Train to engage attendees, distribute materials, and create a welcoming atmosphere wherever outreach
-                happens.</p>
-              <ul class="program-features">
-                <li>✓ People engagement skills</li>
-                <li>✓ Street communication training</li>
-                <li>✓ Team-based outreach practice</li>
-                <li>✓ Mentorship from on-air hosts</li>
-              </ul>
-              <div class="program-meta">
-                <span>📅 Next intake: Coming Soon</span>
-                <span>💰 TBC</span>
-              </div>
-              <a href="#" class="btn btn-primary btn-full" data-page="signup">Enroll Now</a>
-            </div>
-          </div>
-          <div class="program-card fade-in">
-            <div class="program-card-header" style="background: linear-gradient(135deg, #1a1a2e, #2d2d5e);">
-              <span class="program-level">Intermediate</span>
-              <h3>Prayer Lead Training</h3>
-            </div>
-            <div class="program-card-body">
-              <p> Develop the ability to guide prayer efforts and support spiritual covering during outreach moments.
-              </p>
-              <ul class="program-features">
-                <li>✓ Prayer leadership training</li>
-                <li>✓ Spiritual sensitivity development</li>
-                <li>✓ Group intercession practice</li>
-                <li>✓ Mentorship from spiritual leaders</li>
-              </ul>
-              <div class="program-meta">
-                <span>📅 Next intake: Coming Soon</span>
-                <span>💰 TBC</span>
-              </div>
-              <a href="#" class="btn btn-primary btn-full" data-page="signup">Enroll Now</a>
-            </div>
-          </div>
-          <div class="program-card fade-in">
-            <div class="program-card-header" style="background: linear-gradient(135deg, #f2a33a, #e8793a);">
-              <span class="program-level">Advanced</span>
-              <h3>Media Team Training</h3>
-            </div>
-            <div class="program-card-body">
-              <p>Train to document outreach through photography and video while supporting storytelling and interview
-                coverage.</p>
-              <ul class="program-features">
-                <li>✓ Mobile & camera shooting skills</li>
-                <li>✓ Storytelling through media</li>
-                <li>✓ Field production workflow</li>
-              </ul>
-              <div class="program-meta">
-                <span>📅 Next intake: Coming Soon</span>
-                <span>💰 TBC</span>
-              </div>
-              <a href="#" class="btn btn-primary btn-full" data-page="signup">Enroll Now</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="schedule-section">
-          <h2>Weekly Schedule</h2>
-          <div class="schedule-table-wrap">
-            <table class="schedule-table">
-              <thead>
-                <tr>
-                  <th>Day</th>
-                  <th>Time</th>
-                  <th>Program</th>
-                  <th>Level</th>
-                  <th>Room</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Monday</td>
-                  <td>6:30 PM – 8:00 PM</td>
-                  <td>Street Team Foundations</td>
-                  <td><span class="badge badge-beginner">Beginner</span></td>
-                  <td>Main Hall</td>
-                </tr>
-                <tr>
-                  <td>Tuesday</td>
-                  <td>6:30 PM – 8:00 PM</td>
-                  <td>Street Team Leader Training</td>
-                  <td><span class="badge badge-intermediate">Intermediate</span></td>
-                  <td>Leadership Room</td>
-                </tr>
-                <tr>
-                  <td>Wednesday</td>
-                  <td>6:30 PM – 8:00 PM</td>
-                  <td>Prayer Lead Training</td>
-                  <td><span class="badge badge-intermediate">Intermediate</span></td>
-                  <td>Prayer Room</td>
-                </tr>
-                <tr>
-                  <td>Thursday</td>
-                  <td>6:30 PM – 8:00 PM</td>
-                  <td>Media Team Training</td>
-                  <td><span class="badge badge-advanced">Advanced</span></td>
-                  <td>Media Studio</td>
-                </tr>
-                <tr>
-                  <td>Friday</td>
-                  <td>6:30 PM – 8:00 PM</td>
-                  <td>Event Coordinator</td>
-                  <td><span class="badge badge-intermediate">Intermediate</span></td>
-                  <td>Strategy Room</td>
-                </tr>
-                <tr>
-                  <td>Saturday</td>
-                  <td>10:00 AM – 12:00 PM</td>
-                  <td>Interview Lead Training</td>
-                  <td><span class="badge badge-beginner">Beginner</span></td>
-                  <td>Creative Room</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="instructors-section">
-          <div class="section-header">
-            <span class="section-label">Meet the Team</span>
-            <h2>Our Instructors & On-Air Personalities</h2>
-          </div>
-          <div class="instructors-grid">
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #f2503a, #f2a33a);">CL</div>
-              <h4>Chaz Lowder</h4>
-              <p class="instructor-role">Program Director</p>
-              <p>Chaz Lowder is a worship leader from Minnesota, USA, who has been leading worship since 1994. His
-                journey began in high school when he quickly learned guitar for a youth camp, and since then he’s
-                carried a lifelong passion for guiding people into God’s presence through music.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #1a1a2e, #f2503a);">DM</div>
-              <h4>Deborah Moerschell</h4>
-              <p class="instructor-role">Community Outreach Trainer</p>
-              <p>Deborah is from Minnesota and serves as Promotional and Listener Engagement Director at Global Worship
-                Radio. She is passionate about sharing Jesus through worship music and loves how God has transformed her
-                life and daily playlist to glorify Him.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #f2a33a, #e8793a);">RM</div>
-              <h4>Ross Moerschell</h4>
-              <p class="instructor-role">Production Manager</p>
-              <p>Ross Moerschell is a volunteer on the Global Worship Radio production team, where he supports editing
-                interviews and enhancing voice tracks with music to create engaging content for listeners.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">JG</div>
-              <h4>JoAnne Geiger</h4>
-              <p class="instructor-role">Spiritual Director</p>
-              <p>JoAnne is passionate about reaching people around the world through Global Worship Radio. Her journey
-                through many life transitions led her to a deep faith rooted in Matthew 6:33, seeking God first above
-                all else. She now joyfully shares God’s love and celebrates seeing listeners connect from every nation.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">JS</div>
-              <h4>Jacqui Smit</h4>
-              <p class="instructor-role">Podcast Host</p>
-              <p>Jacqui Smit is Assistant Programme Director and a worship leader on Global Worship Radio from George,
-                South Africa. She encountered God’s love at 19 during a difficult season, finding healing through music.
-                Today, she serves with a passion for the next generation, using worship, creativity, and design to help
-                others discover their identity in Christ.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">FC</div>
-              <h4>Fredua Cullinwood</h4>
-              <p class="instructor-role">On Air-Host</p>
-              <p>Fredua Cullinwood is a worship leader on Global Worship Radio from Kumasi, Ghana. He is passionate
-                about teaching prayer rooted in Scripture, encouraging believers to speak God’s Word back to Him in
-                faith. His heart is to build strong, Word-based prayer lives that trust God as a faithful
-                prayer-answering Father.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">EJ</div>
-              <h4>Ella J.</h4>
-              <p class="instructor-role">On Air-Host</p>
-              <p>Ella J is a worship leader from Montreal, Canada, known for leading bilingual worship in English and
-                French. Her life reflects a powerful story of restoration, moving from hopelessness to new life in
-                Christ, captured in the phrase “beauty from ashes” (Isaiah 61:3). She is passionate about helping others
-                discover freedom, hope, and identity through God’s love.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">SM</div>
-              <h4>Silvi Maldonado</h4>
-              <p class="instructor-role">On Air Host</p>
-              <p>Silvi Maldonado is a worship leader on Global Worship Radio from Cartagena, Colombia. She shares a
-                testimony of God’s mercy and love, having learned to place Him first in her life. Her heart is anchored
-                in the revelation that God’s grace is enough and He alone is Lord.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">MS</div>
-              <h4>Michele Sorvik</h4>
-              <p class="instructor-role">PodcastHost</p>
-              <p>Michele Sorvik hosts You’re Not Alone, a podcast offering encouragement, faith-filled conversations,
-                and real-life stories that point listeners toward hope and community.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">NR</div>
-              <h4>Nathalie Russi</h4>
-              <p class="instructor-role">On Air-Host</p>
-              <p>Nathalie Russi is a young worship leader on Global Worship Radio from Cartagena, Colombia. She is
-                passionate about Jesus and carries a vibrant heart for worship, encouraging listeners to grow closer to
-                God through every broadcast.
-              </p>
-            </div>
-            <div class="instructor-card fade-in">
-              <div class="instructor-avatar" style="background: linear-gradient(135deg, #2d2d5e, #f2503a);">VK</div>
-              <h4>Vincent Kiplagat</h4>
-              <p class="instructor-role">Social Media</p>
-              <p>Vincent is the Social Media Manager and technical support lead at Global Worship Radio, combining
-                creative design and tech expertise to enhance the station’s online presence and listener experience.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="enroll-cta">
-          <h2>Join the Global Worship Street Team</h2>
-          <p>Be part of a global movement that trains and activates believers in outreach, prayer, media, and leadership
-            across cities.</p>
-          <a href="#" class="btn btn-primary btn-lg" data-page="signup">Join the Movement</a>
-        </div>
-      </div>
-    </section>
-
     <section class="page" id="page-events">
       <div class="page-hero page-hero-sm" style="background: linear-gradient(135deg, #f2a33a 0%, #f2503a 100%);">
         <div class="container">
@@ -787,10 +431,11 @@
           <h2>Upcoming Events</h2>
         </div>
         <div class="events-grid" id="eventsGrid"></div>
+      </div>
 
     </section>
 
-    <section class="page" id="page-ticket-giveaway">
+    <section class="page" id="page-giveaways">
 
       <!-- Hero -->
       <div class="page-hero page-hero-sm" style="background: linear-gradient(135deg, #f2503a 0%, #f2a33a 100%);">
@@ -884,29 +529,11 @@
                 </select>
               </div>
 
-              <!-- Emoji -->
+              <!-- Participation Code -->
               <div class="form-group">
-                <label>
-                  Did you participate in the Emoji Challenge?
-                </label>
-
-                <select id="emojiParticipation" name="emojiParticipation" required>
-
-                  <option value="">Select</option>
-                  <option>No</option>
-                  <option>Yes</option>
-
-                </select>
-              </div>
-
-              <!-- Bonus -->
-              <div class="form-group hidden" id="bonusCodeField">
-
-                <label>
-                  Enter Your Emoji Challenge Code
-                </label>
-
-                <input type="text" name="bonusCode" placeholder="GWR-XXXXX">
+                <label>Enter Your Participation Code</label>
+                <input type="text" name="participationCode" placeholder="GWR-XXXXX">
+                <small class="field-hint">Got a code from one of our on-air or social challenges? Enter it here for bonus entries — leave blank if you don't have one.</small>
               </div>
 
               <!-- Submit -->
@@ -931,9 +558,9 @@
         <div class="contact-info-col">
 
           <!-- Current Giveaway -->
-          <div class="contact-info-box">
+          <div class="sidebar-section">
 
-            <h3>Current Giveaway</h3>
+            <h3 class="sidebar-heading">Current Giveaway</h3>
 
             <div id="giveawayPromoCard">
 
@@ -945,23 +572,37 @@
 
           </div>
 
-          <!-- Emoji Challenge -->
-          <div class="contact-info-box">
+          <!-- Advertisement space — swap the media block below for an
+               image, a video, or plain text. See the comment inside for
+               how to switch formats. -->
+          <div class="contact-info-box ad-space" id="adSpace">
 
-            <h3>Emoji Challenge</h3>
+            <span class="ad-space-label">Advertisement</span>
 
-            <p>
-              Listen live for emoji clues announced on-air.
+            <!-- IMAGE AD (default) — replace href/src/alt with your own -->
+            <a href="https://gwradio.live" target="_blank" rel="noopener" class="ad-space-media">
+              <img src="assets/Images/logo.png" alt="Advertise with Global Worship Radio" />
+            </a>
+
+            <p class="ad-space-text">
+              Want your event, ministry, or business featured here? Reach thousands of Global Worship Radio
+              listeners.
             </p>
 
-            <p>
-              Enter the secret code for bonus entries and increase
-              your chances of winning.
-            </p>
+            <a href="#contact" data-page="contact" class="btn btn-outline-sm">Advertise With Us</a>
 
-            <p>
-              One valid emoji code equals one bonus chance.
-            </p>
+            <!--
+              TO USE A VIDEO instead of an image, replace the <a class="ad-space-media"> block above with:
+
+                <div class="ad-space-media">
+                  <video controls poster="assets/Images/your-poster.jpg">
+                    <source src="assets/Videos/your-ad.mp4" type="video/mp4">
+                  </video>
+                </div>
+
+              TO USE TEXT ONLY, delete the <a class="ad-space-media"> (or <div class="ad-space-media">)
+              block entirely and keep just the <p> and the button/link below it.
+            -->
 
           </div>
 
@@ -1008,7 +649,7 @@
                 with
                 everything you need to serve effectively as a Street Team member — from communication style to program
                 understanding and engagement standards.</p>
-              <a href="assets\PDF\gwr-street-team-training-handbook.pdf" class="btn btn-outline-sm">Download PDF</a>
+              <a href="assets/PDF\gwr-street-team-training-handbook.pdf" class="btn btn-outline-sm">Download PDF</a>
             </div>
           </div>
           <div class="resource-card fade-in" data-type="guide">
@@ -1020,7 +661,7 @@
                 Discover
                 how to promote prayer moments, events, giveaways, and content that grows engagement and expands global
                 reach.</p>
-              <a href="assets\PDF\gwr-playbook-street-team-outreach.pdf.pdf" class="btn btn-outline-sm">Download
+              <a href="assets/PDF\gwr-playbook-street-team-outreach.pdf.pdf" class="btn btn-outline-sm">Download
                 PDF</a>
             </div>
           </div>
@@ -1268,11 +909,11 @@
           <h4>Quick Links</h4>
           <ul>
             <li><a href="#" data-page="home">Home</a></li>
-            <li><a href="#" data-page="signup">Signup</a></li>
-            <li><a href="#" data-page="training">Training</a></li>
-            <li><a href="#" data-page="events">Events</a></li>
-            <li><a href="#" data-page="resources">Resources</a></li>
-            <li><a href="#" data-page="contact">Contact</a></li>
+            <li><a href="#prayers" data-page="prayers">Prayers</a></li>
+            <li><a href="#events" data-page="events">Events</a></li>
+            <li><a href="#giveaways" data-page="giveaways">Giveaways</a></li>
+            <li><a href="#resources" data-page="resources">Resources</a></li>
+            <li><a href="#contact" data-page="contact">Contact</a></li>
           </ul>
         </div>
         <div class="footer-contact">
@@ -1373,8 +1014,20 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/listen-modal.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/forms.js"></script>
+  <script src="js/resources.js"></script>
+  <script src="js/prayers.js"></script>
+  <script src="js/init.js"></script>
 
 </body>
-
 </html>
