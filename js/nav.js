@@ -26,9 +26,9 @@ function navigateTo(page, options = {}) {
     setTimeout(observeFadeIns, 50);
 
     if (pushState) {
-      const hash = page === 'home' ? '#' : `#${page}`;
-      if (location.hash !== hash) {
-        history.pushState({ page }, '', hash);
+      const path = page === 'home' ? '/' : `/${page}`;
+      if (location.pathname !== path) {
+        history.pushState({ page }, '', path);
       }
     }
   }
@@ -52,24 +52,27 @@ function updateTitle(page) {
   document.title = titles[page] || 'Global Worship Radio';
 }
 
-// Reads the page id out of a URL hash like "#prayers" or "#/prayers/",
+// Reads the page id out of a URL path like "/prayers" or "/prayers/",
 // falling back to "home" for anything blank or unrecognized.
-function pageFromHash() {
-  const raw = location.hash.replace(/^#\/?/, '').split(/[?/]/)[0];
+function pageFromPath() {
+  const raw = location.pathname.replace(/^\/|\/$/g, '');
   return GWR_PAGES.includes(raw) ? raw : 'home';
 }
 
 function checkInitialPage() {
-  const page = pageFromHash();
+  const page = pageFromPath();
   navigateTo(page, { pushState: false });
-  // Normalize the URL (e.g. a trailing slash or missing hash) without adding
-  // an extra history entry.
-  history.replaceState({ page }, '', page === 'home' ? '#' : `#${page}`);
+  // Normalize the URL (e.g. a trailing slash) without adding an extra
+  // history entry.
+  const path = page === 'home' ? '/' : `/${page}`;
+  if (location.pathname !== path) {
+    history.replaceState({ page }, '', path);
+  }
 }
 
 // Browser back/forward buttons
 window.addEventListener('popstate', (e) => {
-  const page = e.state?.page || pageFromHash();
+  const page = e.state?.page || pageFromPath();
   navigateTo(page, { pushState: false });
 });
 
