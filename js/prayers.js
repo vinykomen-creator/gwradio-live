@@ -4,6 +4,17 @@ const PRAYER_BLOCKED_TERMS = ["crypto", "loans", "investment", "suicide", "escor
 const PRAYER_AVATAR_COLORS = ["#f2503a", "#f2a33a", "#1a1a2e", "#d63d28", "#d88c2e", "#2d2d5e"];
 const PRAYER_AVATARS = {};
 
+function escapeHtml(value) {
+  if (value === null || value === undefined) return '';
+
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 let prayerUserId = null;
 let prayerList = []; // local cache, kept in sync via Supabase Realtime
 let prayerChannel = null;
