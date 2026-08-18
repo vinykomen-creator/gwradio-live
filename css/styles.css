@@ -1900,8 +1900,7 @@ body.mini-player-active {
 .prayer-card-text { color: var(--text); line-height: 1.6; margin-bottom: 14px; }
 
 .prayer-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.prayer-react-btn,
-.prayer-reply-toggle {
+.prayer-react-btn {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1914,37 +1913,9 @@ body.mini-player-active {
   cursor: pointer;
   transition: var(--transition);
 }
-.prayer-react-btn .material-symbols-outlined,
-.prayer-reply-toggle .material-symbols-outlined { font-size: 1em; }
+.prayer-react-btn .material-symbols-outlined { font-size: 1em; }
 .prayer-react-btn:hover { border-color: var(--primary); color: var(--primary); }
 .prayer-react-btn.reacted { background: var(--primary); border-color: var(--primary); color: var(--white); }
-
-.prayer-replies {
-  display: none;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.prayer-replies.open { display: block; }
-.prayer-reply { font-size: 0.88rem; color: var(--text); margin-bottom: 8px; }
-.prayer-reply-name { font-weight: 600; margin-right: 6px; color: var(--primary); }
-.prayer-reply-input-row { display: flex; gap: 8px; margin-top: 10px; }
-.prayer-reply-input-row input {
-  flex: 1;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  font-size: 0.85rem;
-}
-.prayer-reply-input-row button {
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  border: none;
-  background: var(--primary);
-  color: var(--white);
-  font-size: 0.85rem;
-  cursor: pointer;
-}
 
 .prayer-empty {
   text-align: center;
@@ -1958,14 +1929,6 @@ body.mini-player-active {
   .search-row { flex-direction: column; }
 }
 
-/* ==========================================================================
-   DARK MODE
-   ------------------------------------------------------------------------
-   Everything on the site is already built on CSS variables, so dark mode is
-   a variable override, not a rewrite. --dark/--dark-mid (header, hero
-   gradients) are intentionally left alone — those stay the same brand navy
-   in both themes.
-   ========================================================================== */
 
 [data-theme="dark"] {
   --text: #e9e7f2;

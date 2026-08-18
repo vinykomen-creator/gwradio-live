@@ -30,17 +30,17 @@
 
   <header class="site-header" id="site-header">
     <nav class="navbar container">
-      <a href="#" class="logo" data-page="home">
+      <a href="/" class="logo" data-page="home">
         <img src="assets/Images/logo.png" alt="Global Worship Radio Logo" class="logo-image" width="180" height="50" />
       </a>
 
       <ul class="nav-links" id="nav-links">
-        <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
-        <li><a href="#prayers" class="nav-link" data-page="prayers">Prayers</a></li>
-        <li><a href="#events" class="nav-link" data-page="events">Events</a></li>
-        <li><a href="#giveaways" class="nav-link" data-page="giveaways">Giveaways</a></li>
-        <li><a href="#resources" class="nav-link" data-page="resources">Resources</a></li>
-        <li><a href="#contact" class="nav-link" data-page="contact">Contact</a></li>
+        <li><a href="/" class="nav-link active" data-page="home">Home</a></li>
+        <li><a href="/prayers" class="nav-link" data-page="prayers">Prayers</a></li>
+        <li><a href="/events" class="nav-link" data-page="events">Events</a></li>
+        <li><a href="/giveaways" class="nav-link" data-page="giveaways">Giveaways</a></li>
+        <li><a href="/resources" class="nav-link" data-page="resources">Resources</a></li>
+        <li><a href="/contact" class="nav-link" data-page="contact">Contact</a></li>
       </ul>
 
       <div class="nav-actions">
@@ -105,7 +105,7 @@
               </svg>
               Listen Live
             </a>
-            <a href="#events" class="btn btn-outline btn-lg" data-page="events">Upcoming Events</a>
+            <a href="/events" class="btn btn-outline btn-lg" data-page="events">Upcoming Events</a>
           </div>
           <div class="hero-stats">
             <div class="stat"><strong>15K+</strong><span>Listeners Daily</span></div>
@@ -142,7 +142,7 @@
               life. Through outreach, encouragement, and acts of service, we aim to build a welcoming community where
               people can encounter God’s presence and grow in their relationship with Him.
             </p>
-            <a href="#prayers" class="btn btn-primary" data-page="prayers">Submit a Prayer Request</a>
+            <a href="/prayers" class="btn btn-primary" data-page="prayers">Submit a Prayer Request</a>
           </div>
           <div class="welcome-cards fade-in">
             <div class="feature-card">
@@ -180,7 +180,7 @@
           </div>
           <div class="events-list" id="homeEventsList"></div>
           <div class="section-cta">
-            <a href="#events" class="btn btn-primary" data-page="events">All Events</a>
+            <a href="/events" class="btn btn-primary" data-page="events">All Events</a>
           </div>
         </div>
       </section>
@@ -572,14 +572,15 @@
 
           </div>
 
-          <!-- Advertisement space — swap the media block below for an
-               image, a video, or plain text. See the comment inside for
-               how to switch formats. -->
+          <!-- Advertisement space — content is pulled from the Supabase
+               "ads" table on page load (see renderAdSpace() in js/events.js
+               for the schema and how to add/swap what's showing). The
+               markup below is just the fallback shown if no active ad row
+               exists yet in Supabase, so it's fine to leave as-is. -->
           <div class="contact-info-box ad-space" id="adSpace">
 
             <span class="ad-space-label">Advertisement</span>
 
-            <!-- IMAGE AD (default) — replace href/src/alt with your own -->
             <a href="https://gwradio.live" target="_blank" rel="noopener" class="ad-space-media">
               <img src="assets/Images/logo.png" alt="Advertise with Global Worship Radio" />
             </a>
@@ -589,20 +590,7 @@
               listeners.
             </p>
 
-            <a href="#contact" data-page="contact" class="btn btn-outline-sm">Advertise With Us</a>
-
-            <!--
-              TO USE A VIDEO instead of an image, replace the <a class="ad-space-media"> block above with:
-
-                <div class="ad-space-media">
-                  <video controls poster="assets/Images/your-poster.jpg">
-                    <source src="assets/Videos/your-ad.mp4" type="video/mp4">
-                  </video>
-                </div>
-
-              TO USE TEXT ONLY, delete the <a class="ad-space-media"> (or <div class="ad-space-media">)
-              block entirely and keep just the <p> and the button/link below it.
-            -->
+            <a href="/contact" data-page="contact" class="btn btn-outline-sm">Advertise With Us</a>
 
           </div>
 
@@ -870,7 +858,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="#" class="logo logo-footer" data-page="home">
+          <a href="/" class="logo logo-footer" data-page="home">
             <img src="assets/Images/logo.png" alt="Global Worship Radio Logo" class="logo-image logo-image-footer"
               width="140" height="40">
           </a>
@@ -908,12 +896,12 @@
         <div class="footer-links">
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="#" data-page="home">Home</a></li>
-            <li><a href="#prayers" data-page="prayers">Prayers</a></li>
-            <li><a href="#events" data-page="events">Events</a></li>
-            <li><a href="#giveaways" data-page="giveaways">Giveaways</a></li>
-            <li><a href="#resources" data-page="resources">Resources</a></li>
-            <li><a href="#contact" data-page="contact">Contact</a></li>
+            <li><a href="/" data-page="home">Home</a></li>
+            <li><a href="/prayers" data-page="prayers">Prayers</a></li>
+            <li><a href="/events" data-page="events">Events</a></li>
+            <li><a href="/giveaways" data-page="giveaways">Giveaways</a></li>
+            <li><a href="/resources" data-page="resources">Resources</a></li>
+            <li><a href="/contact" data-page="contact">Contact</a></li>
           </ul>
         </div>
         <div class="footer-contact">
@@ -1014,9 +1002,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest"></script>
   <script src="js/config.js"></script>
   <script src="js/player.js"></script>
   <script src="js/events.js"></script>

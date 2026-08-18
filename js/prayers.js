@@ -1,17 +1,15 @@
 'use strict';
 
-const PRAYER_BANNED_WORDS = ["shit", "kill", "murder", "hookup", "damn", "crypto", "loans", "investment",
-  "suicide", "crap", "sex", "porn", "nude", "fuck", "fucking", "bitch", "asshole", "dick", "penis", "vagina",
-  "escort", "naked"];
+const PRAYER_BLOCKED_TERMS = ["crypto", "loans", "investment", "suicide", "escort", "hookup"];
 const PRAYER_AVATAR_COLORS = ["#f2503a", "#f2a33a", "#1a1a2e", "#d63d28", "#d88c2e", "#2d2d5e"];
 const PRAYER_AVATARS = {};
 
-let prayerDb = null;
-let prayerAuth = null;
+let prayerUserId = null;
+let prayerList = []; // local cache, kept in sync via Supabase Realtime
+let prayerChannel = null;
 let prayerSelCat = 'Healing';
 let prayerFilterActive = 'All';
 let prayerMineMode = false;
-let prayerList = []; // local cache, kept in sync by the Firestore listener
 
 function prayerAvatarColor(name) {
   if (!PRAYER_AVATARS[name]) {
@@ -33,9 +31,15 @@ function prayerTimeAgo(ts) {
   return Math.floor(h / 24) + 'd ago';
 }
 
-function prayerHasBanned(text) {
+function prayerIsBlocked(text) {
+  if (typeof profanityCleaner === 'undefined') {
+    console.warn('profanity-cleaner not loaded — check the CDN script tag in index.html. Falling back to the supplementary list only.');
+  } else if (profanityCleaner.isProfane(text)) {
+    return true;
+  }
+
   const normalized = text.toLowerCase().replace(/[^a-z]/g, '');
-  return PRAYER_BANNED_WORDS.some(word => normalized.includes(word));
+  return PRAYER_BLOCKED_TERMS.some(word => normalized.includes(word));
 }
 
 function prayerGetReacted() {
@@ -45,48 +49,72 @@ function prayerSaveReacted(r) {
   try { localStorage.setItem('gwr_reacted', JSON.stringify(r)); } catch (e) { /* ignore */ }
 }
 
-function prayerEscapeHtml(str = '') {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+/* ---------- Supabase init ---------- */
 
-/* ---------- Firebase init ---------- */
-
-function initFirebasePrayers() {
-  if (typeof firebase === 'undefined') {
-    console.error('Firebase SDK not loaded — check the script tags in index.html');
+async function initSupabasePrayers() {
+  if (!supabaseClient) {
+    console.error('Prayer wall: Supabase not configured — check SUPABASE_URL / SUPABASE_ANON_KEY in js/config.js');
     showPrayerWallError('Prayer wall is temporarily unavailable.');
-    return;
-  }
-
-  if (typeof FIREBASE_CONFIG === 'undefined' || FIREBASE_CONFIG.apiKey === 'YOUR_FIREBASE_API_KEY') {
-    console.error('FIREBASE_CONFIG still has placeholder values — paste your real Firebase project config into js/config.js');
-    showPrayerWallError('Prayer wall isn\u2019t connected yet — an admin needs to add the Firebase config.');
     return;
   }
 
   try {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(FIREBASE_CONFIG);
+    let { data: { session }, error } = await supabaseClient.auth.getSession();
+
+    if (!session) {
+      const { data, error: signInError } = await supabaseClient.auth.signInAnonymously();
+      if (signInError) throw signInError;
+      session = data.session;
     }
-    prayerDb = firebase.firestore();
-    prayerAuth = firebase.auth();
+
+    prayerUserId = session.user.id;
   } catch (err) {
-    console.error('Firebase init failed — check FIREBASE_CONFIG in js/config.js:', err.message);
-    showPrayerWallError('Prayer wall is temporarily unavailable.');
+    console.error('Prayer wall anonymous sign-in failed:', err.message);
+    showPrayerWallError(
+      err.message?.includes('Anonymous sign-ins are disabled')
+        ? 'Prayer wall isn\u2019t set up yet — an admin needs to enable anonymous sign-ins in Supabase.'
+        : 'Could not connect to the prayer wall — please refresh and try again.'
+    );
     return;
   }
 
-  prayerAuth.signInAnonymously()
-    .then(() => listenPrayers())
-    .catch(err => {
-      console.error('Prayer wall anonymous sign-in failed:', err);
-      showPrayerWallError('Could not connect to the prayer wall — please refresh and try again.');
-    });
+  await fetchPrayers();
+  listenPrayers();
+}
+
+async function fetchPrayers() {
+  try {
+    const { data, error } = await supabaseClient
+      .from('prayers')
+      .select('*')
+      .eq('approved', true)
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+
+    prayerList = data.map(p => ({
+      ...p,
+      ts: new Date(p.created_at).getTime(),
+      reactions: { prayed: p.prayed_count, amen: p.amen_count, standing: p.standing_count },
+    }));
+
+    updatePrayerStats();
+    renderPrayerList();
+  } catch (err) {
+    console.error('Prayer wall fetch failed:', err.message);
+    showPrayerWallError('Could not load prayers right now — please refresh.');
+  }
+}
+
+function listenPrayers() {
+  if (prayerChannel) return; // already subscribed
+  prayerChannel = supabaseClient
+    .channel('prayers-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'prayers' }, () => {
+      fetchPrayers();
+    })
+    .subscribe();
 }
 
 function showPrayerWallError(message) {
@@ -135,7 +163,7 @@ function updatePrayerCharCount() {
   if (el) el.textContent = 400 - document.getElementById('p-prayer').value.length;
 }
 
-/* ---------- Submit / react / reply ---------- */
+/* ---------- Submit / react ---------- */
 
 async function submitPrayer() {
   const prayerText = document.getElementById('p-prayer').value.trim();
@@ -156,7 +184,7 @@ async function submitPrayer() {
   }
 
   if (!prayerText) { msg.textContent = 'Please enter your prayer request.'; return; }
-  if (prayerHasBanned(prayerText)) {
+  if (prayerIsBlocked(prayerText)) {
     msg.textContent = 'Your prayer contains words that cannot be published. Please revise and try again.';
     return;
   }
@@ -164,18 +192,19 @@ async function submitPrayer() {
   const name = (anon || !nameRaw) ? 'Anonymous' : nameRaw;
 
   try {
-    await prayerDb.collection('prayers').add({
+    // Filter already passed above, so this posts straight to the live wall —
+    // no manual approval step.
+    const { error } = await supabaseClient.from('prayers').insert({
       name,
       prayer: prayerText,
       cat: prayerSelCat,
       pinned: urgent,
       approved: true,
-      ts: firebase.firestore.FieldValue.serverTimestamp(),
-      owner: prayerAuth.currentUser?.uid || 'anon',
-      reactions: { prayed: 0, amen: 0, standing: 0 }
+      owner: prayerUserId,
     });
+    if (error) throw error;
   } catch (err) {
-    console.error('Prayer submit error:', err);
+    console.error('Prayer submit error:', err.message);
     msg.textContent = 'Could not send your request — please try again.';
     return;
   }
@@ -197,68 +226,16 @@ async function reactToPrayer(id, type) {
   if (r[key]) return; // already reacted on this device
 
   try {
-    await prayerDb.collection('prayers').doc(id).update({
-      [`reactions.${type}`]: firebase.firestore.FieldValue.increment(1)
-    });
+    const { error } = await supabaseClient.rpc('react_to_prayer', { prayer_id: id, reaction_type: type });
+    if (error) throw error;
   } catch (err) {
-    console.error('Prayer reaction error:', err);
+    console.error('Prayer reaction error:', err.message);
     return;
   }
 
   r[key] = true;
   prayerSaveReacted(r);
-  // no manual re-render needed — the onSnapshot listener updates the UI
-}
-
-function togglePrayerReplies(id) {
-  const el = document.getElementById('replies-' + id);
-  if (el) el.classList.toggle('open');
-}
-
-async function loadPrayerReplies(prayerId) {
-  const snapshot = await prayerDb.collection('prayers').doc(prayerId).collection('replies').orderBy('ts', 'asc').get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-
-async function refreshPrayerReplies(prayerId) {
-  const replies = await loadPrayerReplies(prayerId);
-  const prayer = prayerList.find(p => p.id === prayerId);
-  if (prayer) prayer.replies = replies;
-}
-
-async function sendPrayerReply(id) {
-  const inp = document.getElementById('reply-inp-' + id);
-  if (!inp?.value.trim()) return;
-  if (prayerHasBanned(inp.value)) {
-    showToast('Please keep replies respectful', 'error');
-    return;
-  }
-
-  const lastReply = localStorage.getItem('gwr_last_reply');
-  if (lastReply) {
-    const elapsed = Date.now() - parseInt(lastReply, 10);
-    if (elapsed < 30 * 1000) {
-      showToast('Please wait a few seconds before replying again', 'error');
-      return;
-    }
-  }
-
-  try {
-    await prayerDb.collection('prayers').doc(id).collection('replies').add({
-      name: 'Community Member',
-      text: inp.value.trim(),
-      ts: firebase.firestore.FieldValue.serverTimestamp()
-    });
-  } catch (err) {
-    console.error('Prayer reply error:', err);
-    showToast('Could not send your reply — please try again', 'error');
-    return;
-  }
-
-  localStorage.setItem('gwr_last_reply', Date.now().toString());
-  inp.value = '';
-  await refreshPrayerReplies(id);
-  renderPrayerList();
+  // no manual re-render needed — the Realtime subscription refreshes the UI
 }
 
 /* ---------- Render ---------- */
@@ -272,7 +249,7 @@ function renderPrayerList() {
   const r = prayerGetReacted();
   let list = [...prayerList];
 
-  if (prayerMineMode) list = list.filter(p => p.owner === prayerAuth.currentUser?.uid);
+  if (prayerMineMode) list = list.filter(p => p.owner === prayerUserId);
   if (prayerFilterActive !== 'All') list = list.filter(p => p.cat === prayerFilterActive);
   if (q) list = list.filter(p => p.prayer.toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
   if (sort === 'praying') {
@@ -292,34 +269,23 @@ function renderPrayerList() {
   box.innerHTML = list.map(p => {
     const col = prayerAvatarColor(p.name);
     const rp = r[p.id + ':prayed'], ra = r[p.id + ':amen'], rs = r[p.id + ':standing'];
-    const rlist = p.replies
-      ? p.replies.map(rep => `<div class="prayer-reply"><span class="prayer-reply-name">${prayerEscapeHtml(rep.name)}</span>${prayerEscapeHtml(rep.text)}</div>`).join('')
-      : '';
     return `<div class="prayer-card${p.pinned ? ' pinned' : ''}" role="listitem">
       <div class="prayer-card-top">
         <div class="prayer-avatar" style="background:${col}18;border:1.5px solid ${col}55;color:${col}">${prayerInitials(p.name)}</div>
         <div class="prayer-card-meta">
-          <div class="prayer-card-name">${prayerEscapeHtml(p.name)}</div>
-          <div class="prayer-card-time">${prayerTimeAgo(p.ts)} · ${prayerEscapeHtml(p.cat)}</div>
+          <div class="prayer-card-name">${escapeHtml(p.name)}</div>
+          <div class="prayer-card-time">${prayerTimeAgo(p.ts)} · ${escapeHtml(p.cat)}</div>
         </div>
         <div class="prayer-card-badges">
           ${p.pinned ? '<span class="prayer-badge prayer-badge-pinned"><span class="material-symbols-outlined">local_fire_department</span> Urgent</span>' : ''}
-          <span class="prayer-badge">${prayerEscapeHtml(p.cat)}</span>
+          <span class="prayer-badge">${escapeHtml(p.cat)}</span>
         </div>
       </div>
-      <div class="prayer-card-text">${prayerEscapeHtml(p.prayer)}</div>
+      <div class="prayer-card-text">${escapeHtml(p.prayer)}</div>
       <div class="prayer-card-actions">
         <button class="prayer-react-btn${rp ? ' reacted' : ''}" onclick="reactToPrayer('${p.id}','prayed')"><span class="material-symbols-outlined">front_hand</span>${p.reactions.prayed} Prayed</button>
         <button class="prayer-react-btn${ra ? ' reacted' : ''}" onclick="reactToPrayer('${p.id}','amen')"><span class="material-symbols-outlined">auto_awesome</span>${p.reactions.amen} Amen</button>
         <button class="prayer-react-btn${rs ? ' reacted' : ''}" onclick="reactToPrayer('${p.id}','standing')"><span class="material-symbols-outlined">groups</span>${p.reactions.standing} Standing</button>
-        <button class="prayer-reply-toggle" onclick="togglePrayerReplies('${p.id}')"><span class="material-symbols-outlined">chat_bubble</span>${p.replies ? p.replies.length : 0} Reply</button>
-      </div>
-      <div class="prayer-replies" id="replies-${p.id}">
-        ${rlist}
-        <div class="prayer-reply-input-row">
-          <input type="text" id="reply-inp-${p.id}" placeholder="A word of encouragement…" onkeydown="if(event.key==='Enter')sendPrayerReply('${p.id}')">
-          <button onclick="sendPrayerReply('${p.id}')">Send</button>
-        </div>
       </div>
     </div>`;
   }).join('');
@@ -335,31 +301,10 @@ function updatePrayerStats() {
   todayEl.textContent = prayerList.filter(p => Date.now() - p.ts < 86400000).length;
 }
 
-function listenPrayers() {
-  prayerDb.collection('prayers')
-    .where('approved', '==', true)
-    .orderBy('ts', 'desc')
-    .limit(50)
-    .onSnapshot(async snapshot => {
-      const loaded = await Promise.all(snapshot.docs.map(async doc => {
-        const replies = await loadPrayerReplies(doc.id);
-        return {
-          id: doc.id,
-          ...doc.data(),
-          ts: doc.data().ts?.toMillis() || Date.now(),
-          replies
-        };
-      }));
-      prayerList = loaded;
-      updatePrayerStats();
-      renderPrayerList();
-    }, err => console.error('Prayer wall listener error:', err));
-}
-
 /* ---------- Entry point (called from init.js) ---------- */
 
 function initPrayersPage() {
   document.getElementById('prayer-list').innerHTML =
     '<div class="prayer-empty"><span class="material-symbols-outlined">favorite</span><p>Loading prayers…</p></div>';
-  initFirebasePrayers();
+  initSupabasePrayers();
 }
