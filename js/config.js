@@ -32,7 +32,7 @@ const SUPABASE_URL      = 'https://dieunopidtcxjsvjxpbs.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRpZXVub3BpZHRjeGpzdmp4cGJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MjYxMzgsImV4cCI6MjA5NTEwMjEzOH0.LatWVvrUraIYeI8tAa9fMgiW12SIKO74KRrhx5GdBW0';
 
 const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyC5JUjpPb5_nLA25xZKGYxJIwQXd1t1JwA',
+  apiKey: 'AIzaSyCgRk52ZZLudWNlCkq52fWAnyFSVy36lOU',
   authDomain: 'global-worship-radio.firebaseapp.com',
   projectId: 'global-worship-radio',
   storageBucket: 'global-worship-radio.firebasestorage.app',
