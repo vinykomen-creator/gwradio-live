@@ -16,6 +16,43 @@
   </script>
   <link rel="icon" href="assets/Images/favicon-32x32.png" type="image/x-icon" />
   <title>Global Worship Radio | Connected Through Prayer, Word & Worship</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Global Worship Radio streams worship music, prayer, and the Word 24/7. Listen live, submit a prayer request, join our giveaways, and connect with the Global Street Team community." />
+  <link rel="canonical" href="https://gwradio.live/" />
+
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn, etc.) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Global Worship Radio" />
+  <meta property="og:title" content="Global Worship Radio | Connected Through Prayer, Word & Worship" />
+  <meta property="og:description" content="Stream worship music and the Word 24/7, submit a prayer request, and connect with the Global Street Team community." />
+  <meta property="og:url" content="https://gwradio.live/" />
+  <meta property="og:image" content="https://gwradio.live/assets/Images/logo.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Global Worship Radio | Connected Through Prayer, Word & Worship" />
+  <meta name="twitter:description" content="Stream worship music and the Word 24/7, submit a prayer request, and connect with the Global Street Team community." />
+  <meta name="twitter:image" content="https://gwradio.live/assets/Images/logo.png" />
+
+  <!-- Structured data — helps Google understand this is a radio station /
+       organization, and can surface richer results (logo, social profiles)
+       in search. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RadioStation",
+    "name": "Global Worship Radio",
+    "url": "https://gwradio.live/",
+    "logo": "https://gwradio.live/assets/Images/logo.png",
+    "sameAs": [
+      "https://www.facebook.com/GlobalWorshipFamily",
+      "https://twitter.com/GWorshipRadio",
+      "https://www.instagram.com/globalworshipradio/",
+      "https://www.youtube.com/@globalworshipradio1659"
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
@@ -572,11 +609,11 @@
 
           </div>
 
-          <!-- Advertisement space — content is pulled from the Supabase
-               "ads" table on page load (see renderAdSpace() in js/events.js
-               for the schema and how to add/swap what's showing). The
-               markup below is just the fallback shown if no active ad row
-               exists yet in Supabase, so it's fine to leave as-is. -->
+          <!-- Advertisement carousel — content is pulled from the Supabase
+               "ads" table on page load (see js/ads.js for how it works and
+               the full column reference). The markup below is just the
+               fallback shown if there are no active ad rows in Supabase,
+               so it's fine to leave as-is. -->
           <div class="contact-info-box ad-space" id="adSpace">
 
             <span class="ad-space-label">Advertisement</span>
@@ -1004,6 +1041,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/profanity-cleaner@latest"></script>
   <script src="js/config.js"></script>
+  <script src="js/analytics.js"></script>
   <script src="js/player.js"></script>
   <script src="js/events.js"></script>
   <script src="js/nav.js"></script>
@@ -1013,6 +1051,7 @@
   <script src="js/forms.js"></script>
   <script src="js/resources.js"></script>
   <script src="js/prayers.js"></script>
+  <script src="js/ads.js"></script>
   <script src="js/init.js"></script>
 
 </body>

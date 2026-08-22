@@ -24,6 +24,7 @@ function navigateTo(page, options = {}) {
     closeMenu();
     updateTitle(page);
     setTimeout(observeFadeIns, 50);
+    trackPageView(page);
 
     if (pushState) {
       const path = page === 'home' ? '/' : `/${page}`;

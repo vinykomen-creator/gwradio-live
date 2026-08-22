@@ -397,7 +397,8 @@ function renderGiveawayPromo() {
               <a href="${event.button_url}"
                  class="btn btn-primary btn-sm"
                  target="_blank"
-                 rel="noopener">
+                 rel="noopener"
+                 onclick="logAnalyticsEvent('event_click', {refId:'${event.id}', page:'events'})">
                  Buy Tickets
               </a>
             </div>

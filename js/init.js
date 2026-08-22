@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await renderHomeEvents();
   await renderFeaturedEvent();
   renderGiveawayPromo();
+  initAdCarousel();
 
   checkInitialPage();
 

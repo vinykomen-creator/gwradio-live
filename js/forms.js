@@ -142,6 +142,8 @@ if (participationCode) {
 
   console.log("✅ Supabase insert successful", data);
 
+  logAnalyticsEvent('giveaway_entry', { page: 'giveaways' });
+
   showToast(
   "🎟 Entry submitted successfully!",
   "success"
